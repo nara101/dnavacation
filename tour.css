@@ -1,0 +1,193 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Navbar */
+/* Navbar default */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* ✅ bikin logo dan menu rata tengah */
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: transparent;
+  z-index: 1000;
+  transition: background 0.3s ease;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.3rem;
+  transition: color 0.3s ease; /* transisi halus */
+}
+
+/* Saat discroll */
+.navbar.scrolled {
+  background: rgba(0, 0, 0, 0.4); /* transparan gelap */
+  backdrop-filter: blur(10px);     /* efek blur */
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #fff;
+  margin-left: 20px;
+  margin-top: 8px;
+}
+.logo img {
+  height: 50px; /* atur tinggi */
+  width: auto;  /* biar proporsional */
+}
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+  align-items: center; /* ✅ pastikan semua item sejajar */
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem;
+  line-height: 1;       /* ✅ biar sejajar */
+  padding: 8px 0;       /* samakan tinggi dengan CTA */
+  display: flex;
+  align-items: center;
+}
+
+.nav-links a:hover {
+  color: #023e65; /* berubah jadi oranye */
+}
+.nav-links li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 550;
+  font-size: 1.1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  padding: 8px 0;  /* semua link sama tinggi */
+}
+
+/* Tombol CTA khusus */
+.nav-links li a.cta {
+  background: #023e65;
+  padding: 12px 28px;       /* ✅ bikin lebih besar */
+  border-radius: 4px;
+  font-size: 1.1rem;        /* ✅ lebih besar dari menu biasa */
+  font-weight: 550;
+  margin-right: 20px;
+  margin-left: 2px;        /* ✅ beri jarak dari "Blog" */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;          /* biar fleksibel mengikuti padding */
+  text-align: center;
+}
+
+.nav-links li a.cta:hover {
+  background: #035a94;
+  transform: scale(1.05);
+}
+
+.cta {
+  background: #023e65;
+  padding: 120px 25px;     /* ✅ lebih besar */
+  border-radius: 8px;
+  font-size: 1.1rem;      /* ✅ teks lebih besar */
+  color: #fff !important;
+  transition: background 0.3s ease, transform 0.2s ease;
+  display: flex;          /* pastikan teks tetap center */
+  align-items: center;    /* vertikal center */
+  justify-content: center;
+}
+
+.cta:hover {
+  background: #035a94;   /* warna lebih terang */
+  transform: scale(1.05); /* sedikit membesar saat hover */
+}
+
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+.hero {
+  position: relative;
+  height: 50vh; /* ✅ hanya setengah tinggi layar */
+  background: url('your-image.jpg') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* lapisan gelap transparan */
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.search-bar select, .find-btn {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+}
+
+.find-btn {
+  background-color: #ff7b00;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.find-btn:hover {
+  background-color: #e66a00;
+}
