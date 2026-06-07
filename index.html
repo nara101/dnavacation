@@ -1,371 +1,142 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DNA Vacation</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <!-- Header -->
-  <header>
-    <nav class="navbar">
-      <div class="logo">  <img src="assets/logoo.png" alt="Labiru Tour Logo"></div>
-      <ul class="nav-links">
-        <li><a href="index.html">Beranda</a></li>
-        <li><a href="tour.html">Tour</a></li>
-        <li><a href="rental.html">Rental</a></li>
-        <li><a href="blog.html">Blog</a></li>
-        <li><a href="https://wa.me/6285280825858" class="cta">Reservasi Hotel</a></li>
-      </ul>
-      <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DNA Vacation</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <img src="assets/logoo.png" alt="Labiru Tour Logo" />
+        </div>
+        <ul class="nav-links">
+          <li><a href="index.html">Beranda</a></li>
+          <li><a href="tour.html">Tour</a></li>
+          <li><a href="rental.html">Rental</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li>
+            <a href="https://wa.me/6285280825858" class="cta"
+              >Reservasi Hotel</a
+            >
+          </li>
+        </ul>
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </header>
 
-  <!-- Hero Section -->
-<section class="hero">
-  <div class="hero-content">
-    <h1>Nikmati Liburanmu bersama <br>DNA Vacation!</h1>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Nikmati Liburanmu bersama <br />DNA Vacation!</h1>
 
-    <div class="search-bar">
-      <select>
-        <option disabled selected hidden>Destinasi Wisata</option>
-        <option>Jawa Barat</option>
-        <option>Europe</option>
-        <option>America</option>
-      </select>
-      <select>
-        <option disabled selected hidden>Durasi Wisata</option>
-        <option>3H2M</option>
-        <option>Indonesia</option>
-        <option>Japan</option>
-      </select>
-      <select>
-        <option disabled selected hidden>Range Prices</option>
-        <option>Budget</option>
-        <option>&lt; 500</option>
-        <option>500 - 1000</option>
-        <option>&gt; 1000</option>
-      </select>
-      <button class="find-btn">Cari Paket</button>
-    </div>
-  </div>
-</section>
-
-
-<section class="paket-section">
-  <h2 class="paket-title">PAKET TOUR TERBAIK</h2>
-  <p class="paket-subtitle">Temukan Pengalaman Liburan Terbaik Bersama Kami</p>
-  <div class="paket-grid">
-    <!-- 10 Paket -->
-    <div class="paket-card">
-      <img src="assets/yogya.jpg" alt="Family Tour Malang">
-      <h3>Family Tour Malang 4H3M</h3>
-      <p><i class="fa-regular fa-clock"></i> 4 Hari 3 Malam | <i class="fa-solid fa-location-dot"></i> Malang</p>
-    </div>
-    <div class="paket-card">
-      <img src="assets/yogya.jpg" alt="Family Tour Malang">
-      <h3>Family Tour Malang 4H3M</h3>
-      <p><i class="fa-regular fa-clock"></i> 4 Hari 3 Malam | <i class="fa-solid fa-location-dot"></i> Malang</p>
-    </div>
-    <div class="paket-card">
-      <img src="assets/yogya.jpg" alt="Family Tour Malang">
-      <h3>Family Tour Malang 4H3M</h3>
-      <p><i class="fa-regular fa-clock"></i> 4 Hari 3 Malam | <i class="fa-solid fa-location-dot"></i> Malang</p>
-    </div>
-    <div class="paket-card">
-      <img src="assets/yogya.jpg" alt="Family Tour Malang">
-      <h3>Family Tour Malang 4H3M</h3>
-      <p><i class="fa-regular fa-clock"></i> 4 Hari 3 Malam | <i class="fa-solid fa-location-dot"></i> Malang</p>
-    </div>
-    <div class="paket-card">
-      <img src="assets/yogya.jpg" alt="Family Tour Malang">
-      <h3>Family Tour Malang 4H3M</h3>
-      <p><i class="fa-regular fa-clock"></i> 4 Hari 3 Malam | <i class="fa-solid fa-location-dot"></i> Malang</p>
-    </div>
-    <div class="paket-card">
-      <img src="assets/yogya.jpg" alt="Family Tour Malang">
-      <h3>Family Tour Malang 4H3M</h3>
-      <p><i class="fa-regular fa-clock"></i> 4 Hari 3 Malam | <i class="fa-solid fa-location-dot"></i> Malang</p>
-    </div>
-    <div class="paket-card">
-      <img src="assets/yogya.jpg" alt="Family Tour Malang">
-      <h3>Family Tour Malang 4H3M</h3>
-      <p><i class="fa-regular fa-clock"></i> 4 Hari 3 Malam | <i class="fa-solid fa-location-dot"></i> Malang</p>
-    </div>
-
-  </div>
-  <div class="btnpaket-container">
-    <a href="tour.html" class="btnpaket">Lihat Paket Lainnya</a>
-  </div>
-</section>
-
-
-<!-- WHY CHOOSE US -->
-<section class="why-choose-us text-center text-white">
-  <div class="overlay"></div>
-  <div class="container position-relative">
-    <h2 class="fw-bold">KENAPA MEMILIH KAMI??</h2>
-    <p class="text-uppercase small mt-2">DNA Vacation hadir untuk memastikan setiap langkah perjalanan Anda menjadi pengalaman luar biasa.</p>
-
-    <div class="row justify-content-center mt-5">
-      <div class="col-md-4 mb-4">
-        <div class="feature-box">
-          <div class="icon-circle mb-3">
-            <i class="fa-solid fa-sack-dollar"></i>
-          </div>
-          <h5 class="fw-bold text-white">AFFORDABLE PRICE GUARANTEE</h5>
-          <p>All the Lorem Ipsum generators on the Internet to repeat predefined chunks as necessary, making this the first true generator.</p>
+        <div class="search-bar">
+          <select>
+            <option disabled selected hidden>Destinasi Wisata</option>
+            <option>Jawa Barat</option>
+            <option>Europe</option>
+            <option>America</option>
+          </select>
+          <select>
+            <option disabled selected hidden>Durasi Wisata</option>
+            <option>3H2M</option>
+            <option>Indonesia</option>
+            <option>Japan</option>
+          </select>
+          <select>
+            <option disabled selected hidden>Range Prices</option>
+            <option>Budget</option>
+            <option>&lt; 500</option>
+            <option>500 - 1000</option>
+            <option>&gt; 1000</option>
+          </select>
+          <button class="find-btn">Cari Paket</button>
         </div>
       </div>
+    </section>
 
-      <div class="col-md-4 mb-4">
-        <div class="feature-box">
-          <div class="icon-circle mb-3">
-            <i class="fa-solid fa-globe"></i>
-          </div>
-          <h5 class="fw-bold text-white">WIDE VARIETY OF DESTINATIONS</h5>
-          <p>All the Lorem Ipsum generators on the Internet to repeat predefined chunks as necessary, making this the first true generator.</p>
-        </div>
-      </div>
-
-      <div class="col-md-4 mb-4">
-        <div class="feature-box">
-          <div class="icon-circle mb-3">
-            <i class="fa-solid fa-thumbs-up"></i>
-          </div>
-          <h5 class="fw-bold text-white">Pelayanan Berkualitas T</h5>
-          <p>All the Lorem Ipsum generators on the Internet to repeat predefined chunks as necessary, making this the first true generator.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="testimonial-section">
-  <div class="testimonial-header">
-    <h2>The feeling is <span>mutual</span></h2>
-    <div class="stars">★★★★★</div>
-    <p>4.9 average star review on</p>
-    <div class="review-platforms">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Trustpilot_logo.png" alt="Trustpilot">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
-    </div>
-  </div>
-
-  <div class="testimonial-grid">
-    <div class="testimonial-card">
-      <p>Mom’s ashes have been safely returned to us, we have her death certificate, and we have been walked through a checklist of legal and personal follow-up items. Outstanding service that goes way beyond our expectation.</p>
-      <div class="author">
-        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Donna">
-        <h4>Donna Miller</h4>
-      </div>
-    </div>
-
-    <div class="testimonial-card">
-      <p>My husband was hesitant to even look at this task but Jonah was very good at explaining the process and costs. Great value compared to others. Highly recommend this company.</p>
-      <div class="author">
-        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Valerie">
-        <h4>Valerie Wolf</h4>
-      </div>
-    </div>
-
-    <div class="testimonial-card light-green">
-      <p>It’s hard to wait through the process after a death, but if you take a breath and let them handle everything, they will live up to their promises. Thanks, afterzoom!</p>
-      <div class="author">
-        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="A.H">
-        <h4>A. H.</h4>
-      </div>
-    </div>
-
-    <div class="testimonial-card">
-      <p>Thanks for making a very hard issue something sensitive and empathetic. Jared was so helpful and not pushy. Excellent service, would definitely refer them.</p>
-      <div class="author">
-        <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Mary">
-        <h4>Mary</h4>
-      </div>
-    </div>
-
-    <div class="testimonial-card">
-      <p>Jared made a very difficult time very easy. Took care of everything and kept me informed. Thoughtful and caring. Excellent service!</p>
-      <div class="author">
-        <img src="https://randomuser.me/api/portraits/women/25.jpg" alt="Laurie">
-        <h4>Laurie W.</h4>
-      </div>
-    </div>
-  </div>
-
-  <button class="more-btn">Read more reviews</button>
-    <div class="clients-section mt-5">
-      <h2 class="fw-bold text-uppercase mb-2">Klien Kami</h2>
-      <p class="text-secondary mb-4">
-        Ratusan Perusahaan Telah Mempercayakan Tour & Event Mereka Bersama Kami,<br>
-        Sekarang Giliran Anda.
+    <section class="paket-section">
+      <h2 class="paket-title">PAKET TOUR TERBAIK</h2>
+      <p class="paket-subtitle">
+        Temukan Pengalaman Liburan Terbaik Bersama Kami
       </p>
-      <div class="clients-grid">
-        <div class="client-logo"><img src="assets/bnn.png" alt="BNN"></div>
-        <div class="client-logo"><img src="assets/honda.png" alt="Honda"></div>
-        <div class="client-logo"><img src="assets/pertamina.png" alt="Pertamina"></div>
-        <div class="client-logo"><img src="assets/uii.png" alt="UIN Jakarta"></div>
-        <div class="client-logo"><img src="assets/ojk.png" alt="OJK"></div>
-        <div class="client-logo"><img src="assets/bni.png" alt="BNI"></div>
-        <div class="client-logo"><img src="assets/bi.png" alt="Bank Indonesia"></div>
-        <div class="client-logo"><img src="assets/telkom.png" alt="Telkom Indonesia"></div>
-        <div class="client-logo"><img src="assets/bukalapak.png" alt="Bukalapak"></div>
-        <div class="client-logo"><img src="assets/bri.png" alt="BRI"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="blog-section text-center">
-  <div class="container">
-    <h2 class="fw-bold">LABIRU BLOG</h2>
-    <p class="subtitle">Berbagi Cerita Indah Seputar Wisata Dari Berbagai Pelosok Tanah Air Nusantara</p>
-
-    <div class="blog-grid">
-      <div class="blog-card">
-        <img src="https://www.labirutour.com/wp-content/uploads/2023/11/dieng.jpg" alt="Telaga Warna Dieng">
-        <div class="blog-content">
-          <p class="meta">
-            <i class="fa-regular fa-folder"></i> Info Wisata
-            <i class="fa-regular fa-calendar"></i> 15 Nov 2023
+      <div class="paket-grid">
+        <!-- 10 Paket -->
+        <div class="paket-card">
+          <img src="assets/yogya.jpg" alt="Family Tour Malang" />
+          <h3>Family Tour Malang 4H3M</h3>
+          <p>
+            <i class="fa-regular fa-clock"></i> 4 Hari 3 Malam |
+            <i class="fa-solid fa-location-dot"></i> Malang
           </p>
-          <h5 class="blog-title">Wisata Telaga Warna, Menyelami Keajaiban Alam Dieng</h5>
         </div>
-      </div>
-
-      <div class="blog-card">
-        <img src="https://www.labirutour.com/wp-content/uploads/2022/06/blue-lagoon.jpg" alt="Blue Lagoon Yogyakarta">
-        <div class="blog-content">
-          <p class="meta">
-            <i class="fa-regular fa-folder"></i> Info Wisata
-            <i class="fa-regular fa-calendar"></i> 4 Jun 2022
+        <div class="paket-card">
+          <img src="assets/yogya.jpg" alt="Family Tour Malang" />
+          <h3>Family Tour Malang 4H3M</h3>
+          <p>
+            <i class="fa-regular fa-clock"></i> 4 Hari 3 Malam |
+            <i class="fa-solid fa-location-dot"></i> Malang
           </p>
-          <h5 class="blog-title">Pesona Blue Lagoon Yogyakarta</h5>
         </div>
-      </div>
-
-      <div class="blog-card">
-        <img src="https://www.labirutour.com/wp-content/uploads/2019/09/hotel-ubud.jpg" alt="Hotel Ubud">
-        <div class="blog-content">
-          <p class="meta">
-            <i class="fa-regular fa-folder"></i> Info Wisata
-            <i class="fa-regular fa-calendar"></i> 2 Sep 2019
+        <div class="paket-card">
+          <img src="assets/yogya.jpg" alt="Family Tour Malang" />
+          <h3>Family Tour Malang 4H3M</h3>
+          <p>
+            <i class="fa-regular fa-clock"></i> 4 Hari 3 Malam |
+            <i class="fa-solid fa-location-dot"></i> Malang
           </p>
-          <h5 class="blog-title">Hotel Murah di Ubud Dengan 200 Ribu Sudah Bisa Menikmati Kolam Renang...</h5>
         </div>
-      </div>
-    </div>
-
-    <div class="btn-container">
-      <a href="#" class="btn-orange">Semua Artikel <i class="fa-solid fa-arrow-right"></i></a>
-    </div>
-  </div>
-</section>
-
-<footer>
-
-  <!-- ================= NEWSLETTER SECTION ================= -->
-  <section class="newsletter-section text-white">
-    <div class="container py-5">
-
-      <h2 class="fw-semibold mb-2">
-        Get Inspired to Discover the World
-      </h2>
-
-      <p class="newsletter-sub mb-4">
-        Sign up with your email for exclusive travel inspiration, top destination guides, and special offers.
-      </p>
-
-      <form class="newsletter-form d-flex flex-wrap align-items-center mb-3">
-        <input type="email" placeholder="Enter your email">
-        <button type="submit" class="btn btn-subscribe ms-2">
-          Subscribe
-        </button>
-      </form>
-
-      <p class="small mt-3">
-        Or download our <strong>DESTINATIONS</strong> magazine to start planning your next getaway!
-      </p>
-
-      <button class="btn btn-download mt-2">
-        DOWNLOAD
-      </button>
-
-    </div>
-  </section>
-
-
-
-  <!-- ================= MAIN FOOTER ================= -->
-  <section class="main-footer text-white">
-    <div class="container">
-      <div class="row gy-4">
-
-        <!-- Company Info -->
-        <div class="col-md-4">
-          <h6 class="fw-bold">PT. DNA Vacation</h6>
-          <p class="small mb-2">
-            Jl. Travel Dunia No. 123<br>
-            Jakarta Pusat - Indonesia 10160
+        <div class="paket-card">
+          <img src="assets/yogya.jpg" alt="Family Tour Malang" />
+          <h3>Family Tour Malang 4H3M</h3>
+          <p>
+            <i class="fa-regular fa-clock"></i> 4 Hari 3 Malam |
+            <i class="fa-solid fa-location-dot"></i> Malang
           </p>
-
-          <p class="small mb-1">(021) 1234 5678</p>
-          <p class="small mb-1">(021) 8765 4321</p>
-          <p class="small">(021) 9999 1111</p>
-
-          <img src="logo.png" alt="Logo" class="footer-logo mt-4">
         </div>
-
-        <!-- About -->
-        <div class="col-md-3">
-          <h6 class="fw-bold">About Us</h6>
-          <ul class="list-unstyled small footer-links">
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Terms and Conditions</a></li>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Suggestions</a></li>
-            <li><a href="#">FAQ</a></li>
-          </ul>
+        <div class="paket-card">
+          <img src="assets/yogya.jpg" alt="Family Tour Malang" />
+          <h3>Family Tour Malang 4H3M</h3>
+          <p>
+            <i class="fa-regular fa-clock"></i> 4 Hari 3 Malam |
+            <i class="fa-solid fa-location-dot"></i> Malang
+          </p>
         </div>
-
-        <!-- Social & Payment -->
-        <div class="col-md-5">
-          <h6 class="fw-bold">Follow Us on</h6>
-
-          <div class="social-icons mb-4">
-            <a href="#"><i class="bi bi-instagram"></i></a>
-            <a href="#"><i class="bi bi-twitter-x"></i></a>
-            <a href="#"><i class="bi bi-facebook"></i></a>
-            <a href="#"><i class="bi bi-tiktok"></i></a>
-          </div>
-
-          <h6 class="fw-bold">Payment Partners</h6>
-          <div class="payment-icons">
-          </div>
-          
+        <div class="paket-card">
+          <img src="assets/yogya.jpg" alt="Family Tour Malang" />
+          <h3>Family Tour Malang 4H3M</h3>
+          <p>
+            <i class="fa-regular fa-clock"></i> 4 Hari 3 Malam |
+            <i class="fa-solid fa-location-dot"></i> Malang
+          </p>
         </div>
-
+        <div class="paket-card">
+          <img src="assets/yogya.jpg" alt="Family Tour Malang" />
+        </div>
       </div>
-    </div>
-
-    <!-- Bottom -->
-    <div class="footer-bottom text-center">
-      © 2026 DNA Vacation Tour & Travel | Gateway to Great Destinations
-    </div>
-  </section>
-
-</footer>
-  <script src="script.js"></script>
-</body>
+    </section>
+  </body>
 </html>

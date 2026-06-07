@@ -1,121 +1,72 @@
 <?php
-session_start();
-if (!isset($_SESSION['admin'])) {
-    header("Location: login.php");
-    exit;
+include "db.php";
+$currentPage = 'blog';
+$pageTitle = 'Blog & Tips Travel - DNA Vacation';
+$pageDesc = 'Tips travel, rekomendasi destinasi, panduan liburan dari DNA Vacation.';
+
+$where = ["status='publish'"];
+if (!empty($_GET['kategori'])) {
+    $k = $conn->real_escape_string($_GET['kategori']);
+    $where[] = "kategori='$k'";
 }
+if (!empty($_GET['q'])) {
+    $q = $conn->real_escape_string($_GET['q']);
+    $where[] = "(judul LIKE '%$q%' OR konten LIKE '%$q%')";
+}
+$whereSQL = implode(' AND ', $where);
+$result = $conn->query("SELECT * FROM blog WHERE $whereSQL ORDER BY id DESC");
+
+include "includes/header.php";
 ?>
+<section class="page-hero">
+    <h1>Blog & Artikel</h1>
+    <p class="breadcrumb-trail"><a href="index.php">Home</a> / Blog</p>
+</section>
 
-<!DOCTYPE html>
-<html lang="id">
+<section class="tour-list-section">
+    <div class="container">
+        <form method="GET" class="filter-bar">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Cari Artikel</label>
+                    <input type="text" name="q" class="form-control" placeholder="Kata kunci..." value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold">Kategori</label>
+                    <select name="kategori" class="form-select">
+                        <option value="">Semua</option>
+                        <?php foreach (['tips_travel','rekomendasi_destinasi','paket_tour','hotel','rental_mobil','promo'] as $k): ?>
+                            <option value="<?= $k ?>" <?= ($_GET['kategori']??'')==$k?'selected':'' ?>><?= labelKategori($k) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn w-100" style="background:#0a3d62;color:#fff;border:none;padding:10px 0;border-radius:8px;">Filter</button>
+                </div>
+            </div>
+        </form>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Kelola Rental</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: #f4f6f8;
-            display: flex
-        }
-
-        .sidebar {
-            width: 240px;
-            background: #1f3c4a;
-            min-height: 100vh;
-            padding: 20px;
-            color: #fff
-        }
-
-        .sidebar a {
-            display: block;
-            color: #fff;
-            text-decoration: none;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px
-        }
-
-        .sidebar a:hover {
-            background: #2c5364
-        }
-
-        .content {
-            flex: 1;
-            padding: 30px
-        }
-
-        .header {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px
-        }
-
-        .btn {
-            background: #2c5364;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 8px;
-            text-decoration: none
-        }
-
-        table {
-            width: 100%;
-            background: #fff;
-            border-collapse: collapse;
-            border-radius: 12px;
-            overflow: hidden
-        }
-
-        th,
-        td {
-            padding: 15px
-        }
-
-        th {
-            background: #1f3c4a;
-            color: #fff
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="sidebar">
-        <a href="dashboard.php">Dashboard</a>
-        <a href="tour.php">Kelola Tour</a>
-        <a href="rental.php">Kelola Rental</a>
-        <a href="blog.php">Kelola Blog</a>
-        <a href="logout.php">Logout</a>
+        <?php if ($result && $result->num_rows): ?>
+            <div class="blog-grid">
+                <?php while ($b = $result->fetch_assoc()): ?>
+                    <a href="blog-detail.php?id=<?= $b['id'] ?>" class="blog-card">
+                        <img src="<?= fotoUrl($b['gambar'], 'blog') ?>" alt="<?= htmlspecialchars($b['judul']) ?>">
+                        <div class="blog-content">
+                            <p class="meta">
+                                <i class="fa-regular fa-folder"></i> <?= labelKategori($b['kategori']) ?>
+                                &nbsp;<i class="fa-regular fa-calendar"></i> <?= date('d M Y', strtotime($b['created_at'])) ?>
+                            </p>
+                            <h5><?= htmlspecialchars($b['judul']) ?></h5>
+                            <p><?= htmlspecialchars(substr(strip_tags($b['konten']), 0, 110)) ?>...</p>
+                        </div>
+                    </a>
+                <?php endwhile; ?>
+            </div>
+        <?php else: ?>
+            <div class="text-center py-5">
+                <h4>Belum ada artikel</h4>
+            </div>
+        <?php endif; ?>
     </div>
-
-    <div class="content">
-        <div class="header">
-            <h2>Kelola Rental</h2>
-            <a href="rental_tambah.php" class="btn">+ Tambah Rental</a>
-        </div>
-
-        <table>
-            <tr>
-                <th>No</th>
-                <th>Nama Kendaraan</th>
-                <th>Harga / Hari</th>
-                <th>Aksi</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Toyota Avanza</td>
-                <td>Rp 350.000</td>
-                <td>
-                    <a class="btn">Edit</a>
-                    <a class="btn" style="background:#b30000">Hapus</a>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-</body>
-
-</html>
+</section>
+<?php include "includes/footer.php"; ?>
