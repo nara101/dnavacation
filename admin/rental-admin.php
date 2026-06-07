@@ -1,6 +1,9 @@
 <?php
 include "auth.php";
 include "sidebar.php";
+include "../db.php";
+$adminPage = 'rental';
+$result = $conn->query("SELECT * FROM rental ORDER BY id DESC");
 ?>
 
 <!DOCTYPE html>
@@ -76,6 +79,10 @@ include "sidebar.php";
             color: #fff
         }
     </style>
+    <title>Kelola Rental - DNA Vacation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -86,33 +93,11 @@ include "sidebar.php";
         <a href="rentl-admin.php">Kelola Rental</a>
         <a href="blog.php">Kelola Blog</a>
         <a href="logout.php">Logout</a>
-    </div>
-
-    <div class="content">
-        <div class="header">
-            <h2>Kelola Rental</h2>
-            <a href="rental_tambah.php" class="btn">+ Tambah Rental</a>
-        </div>
-
-        <table>
-            <tr>
-                <th>No</th>
-                <th>Nama Kendaraan</th>
-                <th>Harga / Hari</th>
-                <th>Aksi</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Toyota Avanza</td>
-                <td>Rp 350.000</td>
-                <td>
-                    <a class="btn">Edit</a>
-                    <a class="btn" style="background:#b30000">Hapus</a>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-</body>
-
-</html>
+        <?php include "sidebar.php"; ?>
+        <div class="content">
+            <div class="header">
+                <div>
+                    <h1>Kelola Rental Mobil</h1>
+                    <p>Daftar mobil rental</p>
+                </div>
+                <a href="rental-add.php" class="btn-primary"><i class="fa-solid fa-plus"></i> Tambah Mobil</a>

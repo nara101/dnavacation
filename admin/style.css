@@ -3,11 +3,37 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', sans-serif;
+/* =====================================================
+   DNA Vacation — Admin Panel Styles
+   ===================================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+body { background: #f3f6fa; display: flex; min-height: 100vh; color: #2c3e50; }
+a { text-decoration: none; }
+
+/* ========== Sidebar ========== */
+.sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #0a3d62 0%, #082c47 100%);
+    min-height: 100vh; padding: 0;
+    color: #fff;
+    position: sticky; top: 0;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.05);
 }
 
 body {
     background: #f4f6f8;
     color: #333;
+.sidebar .brand { padding: 30px 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 14px; }
+.sidebar .brand h2 { font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+.sidebar .brand h2 span { color: #f39c12; }
+.sidebar .brand small { color: rgba(255,255,255,0.65); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
+.sidebar-menu { padding: 0 14px 30px; }
+.sidebar-menu a {
+    display: flex; align-items: center; gap: 12px;
+    color: rgba(255,255,255,0.85); padding: 12px 16px;
+    border-radius: 10px; margin-bottom: 4px;
+    font-size: 0.92rem; font-weight: 500;
+    transition: 0.25s;
 }
 
         * {
@@ -72,113 +98,3 @@ body {
         }
 
         /* CARD MENU */
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
-            transition: .3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card h3 {
-            margin: 0;
-            margin-bottom: 10px;
-            color: #1f3c4a;
-        }
-
-        .card p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .card a {
-            display: inline-block;
-            margin-top: 15px;
-            text-decoration: none;
-            color: white;
-            background: #2c5364;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #f4f6f8;
-    display: flex;
-}
-
-.content {
-    flex: 1;
-    padding: 30px;
-}
-
-.header {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-    box-shadow: 0 8px 20px rgba(0,0,0,.08);
-}
-
-.btn-primary {
-    display: inline-block;
-    margin-bottom: 20px;
-    background: #2c5364;
-    color: white;
-    padding: 10px 16px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.table-box {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,.08);
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 12px;
-    border-bottom: 1px solid #eee;
-    text-align: left;
-}
-
-th {
-    background: #f0f3f6;
-}
-
-.btn-edit {
-    background: #ffc107;
-    color: #000;
-    padding: 6px 10px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 13px;
-}
-
-.btn-delete {
-    background: #dc3545;
-    color: white;
-    padding: 6px 10px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 13px;
-}
