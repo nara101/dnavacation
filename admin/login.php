@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 require_once __DIR__ . '/../includes/config.php';
 
 if (isLoggedIn()) { header('Location: ' . ADMIN_URL . '/'); exit; }
@@ -71,3 +72,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
+=======
+session_start();
+// include "../db.php";
+
+/* JIKA SUDAH LOGIN → JANGAN MASUK LOGIN LAGI */
+if (isset($_SESSION['admin'])) {
+    header("Location: dashboard.php");
+    exit;
+}
+
+if (isset($_POST['submit'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    $stmt = $conn->prepare("SELECT * FROM admin WHERE username=?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        if (password_verify($password, $row['password'])) {
+            $_SESSION['admin'] = $row['username'];
+            header("Location: dashboard.php");
+            exit;
+        } else {
+            $error = "Password salah";
+        }
+    } else {
+        $error = "Username tidak ditemukan";
+    }
+}
+>>>>>>> 20a16d92d2a393b6d0f29d71daee7f38359db22d
