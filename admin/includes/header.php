@@ -1,4 +1,8 @@
 <?php
+// Aktifkan output buffering agar redirect (header('Location: ...')) di halaman
+// admin tetap berfungsi meski HTML header sudah dirender. Tanpa ini, aksi
+// approve/hapus/simpan gagal redirect dan menampilkan layar putih.
+if (!ob_get_level()) ob_start();
 require_once __DIR__ . '/../../includes/config.php';
 requireLogin();
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
@@ -20,7 +24,7 @@ $unreadMsgs = (int)$pdo->query("SELECT COUNT(*) FROM contact_messages WHERE is_r
     <link rel="icon" type="image/jpeg" href="<?= asset('img/logo-dna.jpg') ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
     <link href="<?= asset('css/style.css') ?>" rel="stylesheet">
 </head>
 <body class="admin-body">
@@ -31,7 +35,7 @@ $unreadMsgs = (int)$pdo->query("SELECT COUNT(*) FROM contact_messages WHERE is_r
         <a href="<?= ADMIN_URL ?>/">
             <img src="<?= asset('img/logo-dna.jpg') ?>" alt="DNA">
             <div>
-                <span>DNA Vacation</span>
+                <span>DNA VACATION</span>
                 <span class="tag">Admin Panel</span>
             </div>
         </a>
@@ -52,6 +56,10 @@ $unreadMsgs = (int)$pdo->query("SELECT COUNT(*) FROM contact_messages WHERE is_r
             <i class="bi bi-journal-check"></i><span>Booking Tour</span>
             <?php if ($newTourBookings): ?><span class="badge bg-danger ms-auto"><?= $newTourBookings ?></span><?php endif; ?>
         </a>
+        <a href="<?= ADMIN_URL ?>/custom-trips.php" class="sidebar-link <?= $currentPage === 'custom-trips' ? 'active' : '' ?>">
+            <i class="bi bi-compass"></i><span>Custom Trip</span>
+            <?php if ($newCustomTrips): ?><span class="badge bg-danger ms-auto"><?= $newCustomTrips ?></span><?php endif; ?>
+        </a>
 
         <div class="sidebar-heading">Rental Mobil</div>
         <a href="<?= ADMIN_URL ?>/cars.php" class="sidebar-link <?= in_array($currentPage, ['cars','car-form']) ? 'active' : '' ?>">
@@ -70,18 +78,25 @@ $unreadMsgs = (int)$pdo->query("SELECT COUNT(*) FROM contact_messages WHERE is_r
             <i class="bi bi-chat-quote"></i><span>Testimoni</span>
             <?php if ($pendingTesti): ?><span class="badge bg-warning text-dark ms-auto"><?= $pendingTesti ?></span><?php endif; ?>
         </a>
+
+        <div class="sidebar-heading">Data Master</div>
         <a href="<?= ADMIN_URL ?>/destinations.php" class="sidebar-link <?= $currentPage === 'destinations' ? 'active' : '' ?>">
             <i class="bi bi-geo-alt"></i><span>Destinasi</span>
+        </a>
+        <a href="<?= ADMIN_URL ?>/tour-categories.php" class="sidebar-link <?= $currentPage === 'tour-categories' ? 'active' : '' ?>">
+            <i class="bi bi-tags"></i><span>Jenis Paket</span>
+        </a>
+        <a href="<?= ADMIN_URL ?>/hotels.php" class="sidebar-link <?= $currentPage === 'hotels' ? 'active' : '' ?>">
+            <i class="bi bi-building"></i><span>Hotel</span>
+        </a>
+        <a href="<?= ADMIN_URL ?>/attractions.php" class="sidebar-link <?= $currentPage === 'attractions' ? 'active' : '' ?>">
+            <i class="bi bi-signpost-split"></i><span>Objek Wisata</span>
         </a>
 
         <div class="sidebar-heading">Request</div>
         <a href="<?= ADMIN_URL ?>/hotel-requests.php" class="sidebar-link <?= $currentPage === 'hotel-requests' ? 'active' : '' ?>">
             <i class="bi bi-building"></i><span>Request Hotel</span>
             <?php if ($newHotelReqs): ?><span class="badge bg-danger ms-auto"><?= $newHotelReqs ?></span><?php endif; ?>
-        </a>
-        <a href="<?= ADMIN_URL ?>/custom-trips.php" class="sidebar-link <?= $currentPage === 'custom-trips' ? 'active' : '' ?>">
-            <i class="bi bi-compass"></i><span>Custom Trip</span>
-            <?php if ($newCustomTrips): ?><span class="badge bg-danger ms-auto"><?= $newCustomTrips ?></span><?php endif; ?>
         </a>
         <a href="<?= ADMIN_URL ?>/messages.php" class="sidebar-link <?= $currentPage === 'messages' ? 'active' : '' ?>">
             <i class="bi bi-envelope"></i><span>Pesan Masuk</span>
@@ -91,6 +106,9 @@ $unreadMsgs = (int)$pdo->query("SELECT COUNT(*) FROM contact_messages WHERE is_r
         <div class="sidebar-heading">Sistem</div>
         <a href="<?= ADMIN_URL ?>/settings.php" class="sidebar-link <?= $currentPage === 'settings' ? 'active' : '' ?>">
             <i class="bi bi-gear"></i><span>Pengaturan Tampilan</span>
+        </a>
+        <a href="<?= ADMIN_URL ?>/admin-accounts.php" class="sidebar-link <?= $currentPage === 'admin-accounts' ? 'active' : '' ?>">
+            <i class="bi bi-people"></i><span>Akun Admin</span>
         </a>
         <a href="<?= ADMIN_URL ?>/logout.php" class="sidebar-link" style="color:#fca5a5">
             <i class="bi bi-box-arrow-left"></i><span>Logout</span>
