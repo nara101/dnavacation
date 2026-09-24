@@ -2,7 +2,10 @@
 // Aktifkan output buffering agar redirect (header('Location: ...')) di halaman
 // admin tetap berfungsi meski HTML header sudah dirender. Tanpa ini, aksi
 // approve/hapus/simpan gagal redirect dan menampilkan layar putih.
-if (!ob_get_level()) ob_start();
+// Dipaksa tanpa syarat: sebagian server sudah punya buffer bawaan yang
+// keburu ter-flush, jadi kita tambahkan buffer sendiri yang menahan output
+// sampai skrip selesai.
+ob_start();
 require_once __DIR__ . '/../../includes/config.php';
 requireLogin();
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
