@@ -380,7 +380,14 @@ $activeTours = $pdo->query("SELECT id, title FROM tours WHERE is_active=1 ORDER 
                     var res = JSON.parse(xhr.responseText);
                     if (res && res.redirect) target = res.redirect;
                 } catch (e) {}
-                window.location.href = target;
+                // Tambah parameter unik agar browser BENAR-BENAR memuat ulang.
+                // Kalau URL tujuan sama persis (termasuk #hash) dengan URL saat ini,
+                // browser tidak akan reload dan overlay akan macet di "Mengalihkan".
+                var hashIdx = target.indexOf('#');
+                var hash = hashIdx >= 0 ? target.slice(hashIdx) : '';
+                var path = hashIdx >= 0 ? target.slice(0, hashIdx) : target;
+                path += (path.indexOf('?') >= 0 ? '&' : '?') + '_ok=' + Date.now();
+                window.location.href = path + hash;
             });
 
             xhr.addEventListener('error', function() {
