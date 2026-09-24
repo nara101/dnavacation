@@ -31,10 +31,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_testimonial'])
     $rating = max(1, min(5, (int)($_POST['rating'] ?? 5)));
     $postError = '';
 
+    // Upload file bersifat OPSIONAL: kalau gagal, testimoni tetap disimpan
+    // (tanpa file) dengan catatan, agar tidak hilang total.
+    $warnings = [];
+
     $image = null;
     if (!empty($_FILES['image']['name'])) {
         $img = uploadImage($_FILES['image'], 'testimonials');
-        if ($img) $image = $img;
+        if ($img) {
+            $image = $img;
+        } else {
+            $warnings[] = 'Foto gagal diunggah (cek format/ukuran, atau folder uploads/testimonials belum bisa ditulis), jadi testimoni disimpan tanpa foto.';
+        }
     }
 
     $video = null;
@@ -43,15 +51,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_testimonial'])
         if ($vid) {
             $video = $vid;
         } else {
-            $postError = 'Format video tidak didukung atau ukuran melebihi 50MB. Gunakan MP4, WEBM, atau MOV.';
+            $warnings[] = 'Video gagal diunggah (maks 50MB, format MP4/WEBM/MOV, atau folder uploads/testimonials belum bisa ditulis), jadi testimoni disimpan tanpa video.';
         }
     }
 
-    if (!$postError && $name && $content) {
+    if ($name && $content) {
         $stmt = $pdo->prepare("INSERT INTO testimonials (customer_name, customer_location, content, rating, tour_id, tour_name, image, video, is_active) VALUES (?,?,?,?,?,?,?,?,0)");
         $stmt->execute([$name, $location, $content, $rating, $tourId, $tourName, $image, $video]);
-        setFlash('success', 'Terima kasih! Testimoni Anda telah kami terima dan akan ditampilkan setelah moderasi admin.');
-    } elseif (!$postError) {
+        if ($warnings) {
+            setFlash('warning', 'Testimoni tersimpan dan menunggu moderasi admin. Catatan: ' . implode(' ', $warnings));
+        } else {
+            setFlash('success', 'Terima kasih! Testimoni Anda telah kami terima dan akan ditampilkan setelah moderasi admin.');
+        }
+    } else {
         $postError = 'Nama dan isi testimoni wajib diisi.';
     }
 
