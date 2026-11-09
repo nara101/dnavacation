@@ -1,25 +1,13 @@
 <?php
-/**
- * DNA Vacation - Configuration
- */
-
 // ===== DATABASE =====
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'u833465883_db_NmV086eQ');
-define('DB_USER', 'u833465883_usr_NmV086eQ');        // Ganti dengan user MySQL kamu
-define('DB_PASS', 'Cr^9MXyhg3Jt');            // Ganti dengan password MySQL kamu
+define('DB_NAME', '');
+define('DB_USER', '');       
+define('DB_PASS', '');  
 
 // ===== APP =====
 define('SITE_NAME', 'DNA VACATION');
 
-/**
- * Domain produksi. Isi setelah website di-deploy, contoh:
- *   define('SITE_DOMAIN', 'https://dnavacation.com');
- *
- * Kalau dikosongkan, BASE_URL dideteksi otomatis dari request.
- * DISARANKAN diisi di server produksi supaya link verifikasi email &
- * reset password tidak bisa dipalsukan lewat header Host.
- */
 define('SITE_DOMAIN', '');
 
 if (SITE_DOMAIN !== '') {
@@ -28,15 +16,11 @@ if (SITE_DOMAIN !== '') {
     // Fallback untuk CLI / cron job
     define('BASE_URL', 'http://localhost/dna-vacation');
 } else {
-    // Deteksi https — termasuk di belakang proxy/CDN (Cloudflare, load balancer)
     $isHttps = (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off')
         || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https')
         || (($_SERVER['SERVER_PORT'] ?? '') == 443);
-
-    // Ambil host, buang karakter yang tidak valid
     $host = preg_replace('/[^A-Za-z0-9\.\-:]/', '', $_SERVER['HTTP_HOST']);
 
-    // Deteksi sub-folder: '/dna-vacation' di XAMPP, '' kalau di root domain
     $projectDir = str_replace('\\', '/', dirname(__DIR__));
     $docRoot    = str_replace('\\', '/', rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/'));
     $basePath   = '';
@@ -54,9 +38,8 @@ define('UPLOAD_DIR', __DIR__ . '/../uploads/');
 define('UPLOAD_URL', BASE_URL . '/uploads/');
 
 // ===== WHATSAPP =====
-define('DEFAULT_WA', '6282349627779'); // Ganti dengan nomor WA bisnis
+define('DEFAULT_WA', '6282349627779'); 
 
-// ===== SESSION =====
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -138,10 +121,6 @@ function uploadImage($file, $folder = 'tours') {
     return false;
 }
 
-/**
- * Asset URL with cache-busting version stamp so browsers pick up
- * CSS/JS changes immediately instead of serving a stale cached copy.
- */
 function asset($path) {
     $url = BASE_URL . '/assets/' . $path;
     $file = __DIR__ . '/../assets/' . $path;
@@ -177,33 +156,23 @@ function uploadUrl($path) {
     return UPLOAD_URL . $path;
 }
 
-/**
- * Ubah link YouTube / Google Drive jadi URL embed untuk dipakai di <iframe>.
- * Return null kalau bukan link yang dikenali.
- */
 function videoEmbedUrl($url) {
     $url = trim((string)$url);
     if ($url === '') return null;
 
-    // YouTube: watch?v=ID, youtu.be/ID, shorts/ID, embed/ID
     if (preg_match('~(?:youtube\.com/(?:watch\?(?:[^#]*&)?v=|shorts/|embed/|live/)|youtu\.be/)([A-Za-z0-9_-]{11})~i', $url, $m)) {
         return 'https://www.youtube.com/embed/' . $m[1];
     }
-    // Google Drive: /file/d/ID/..., open?id=ID, uc?id=ID
     if (preg_match('~drive\.google\.com/(?:file/d/|open\?id=|uc\?(?:[^#]*&)?id=)([A-Za-z0-9_-]+)~i', $url, $m)) {
         return 'https://drive.google.com/file/d/' . $m[1] . '/preview';
     }
     return null;
 }
 
-/** True kalau nilai video berupa link (http/https), bukan path file upload lama. */
 function isVideoUrl($video) {
     return (bool)preg_match('#^https?://#i', trim((string)$video));
 }
 
-/**
- * Get logo URL — uses custom uploaded logo if set, else default.
- */
 function logoUrl() {
     $custom = getSetting('custom_logo');
     if ($custom) return uploadUrl($custom);
@@ -219,9 +188,6 @@ function heroBgUrl() {
     return asset('img/nature.jpg');
 }
 
-/**
- * Read a boolean toggle setting with a default when key is absent.
- */
 function settingBool($key, $default = true) {
     $val = getSetting($key);
     if ($val === '' || $val === null) return $default;
@@ -283,8 +249,8 @@ function generateToken($length = 32) {
 // ===== SMTP EMAIL CONFIG =====
 define('SMTP_HOST', 'smtp.hostinger.com');
 define('SMTP_PORT', 465);
-define('SMTP_USER', 'information@dnavacation.id');
-define('SMTP_PASS', 'nabilarey06!');
+define('SMTP_USER', '');
+define('SMTP_PASS', '');
 define('SMTP_FROM_NAME', 'DNA VACATION');
 
 require_once __DIR__ . '/PHPMailer/Exception.php';
