@@ -1,14 +1,19 @@
 <?php
-<<<<<<< HEAD
 require_once 'includes/config.php';
 
 $slug = $_GET['slug'] ?? '';
-if (!$slug) { header('Location: ' . BASE_URL . '/tours.php'); exit; }
+if (!$slug) {
+    header('Location: ' . BASE_URL . '/tours.php');
+    exit;
+}
 
 $stmt = $pdo->prepare("SELECT t.*, d.name as destination_name, c.name as category_name FROM tours t LEFT JOIN destinations d ON t.destination_id=d.id LEFT JOIN tour_categories c ON t.category_id=c.id WHERE t.slug=? AND t.is_active=1");
 $stmt->execute([$slug]);
 $tour = $stmt->fetch();
-if (!$tour) { header('Location: ' . BASE_URL . '/tours.php'); exit; }
+if (!$tour) {
+    header('Location: ' . BASE_URL . '/tours.php');
+    exit;
+}
 
 // Increment view count
 $pdo->prepare("UPDATE tours SET view_count = view_count + 1 WHERE id = ?")->execute([$tour['id']]);
@@ -20,9 +25,17 @@ $pageDescription = truncate(strip_tags($tour['description']), 160);
 $bookingSuccess = false;
 $bookingError = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_tour'])) {
-    $name = trim($_POST['customer_name'] ?? '');
-    $wa = trim($_POST['customer_whatsapp'] ?? '');
-    $email = trim($_POST['customer_email'] ?? '');
+    if (!isUserLoggedIn()) {
+        $_SESSION['login_redirect'] = $_SERVER['REQUEST_URI'];
+        setFlash('warning', 'Silakan login terlebih dahulu untuk melakukan booking.');
+        header('Location: ' . BASE_URL . '/user-login.php');
+        exit;
+    }
+
+    $loggedUser = getLoggedInUser();
+    $name = trim($_POST['customer_name'] ?? $loggedUser['full_name'] ?? $loggedUser['username']);
+    $wa = trim($_POST['customer_whatsapp'] ?? $loggedUser['phone']);
+    $email = trim($_POST['customer_email'] ?? $loggedUser['email']);
     $date = $_POST['departure_date'] ?? '';
     $persons = max(1, (int)($_POST['num_persons'] ?? 1));
     $notes = trim($_POST['notes'] ?? '');
@@ -75,14 +88,14 @@ require_once 'includes/header.php';
 <section class="py-5">
     <div class="container">
         <?php if ($bookingSuccess): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Booking berhasil!</strong> Kode booking Anda: <strong><?= e($code) ?></strong>. Tim kami akan segera menghubungi Anda.
-            <a href="<?= waLink($waMsg) ?>" target="_blank" class="btn btn-wa btn-sm ms-2">Konfirmasi via WhatsApp</a>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Booking berhasil!</strong> Kode booking Anda: <strong><?= e($code) ?></strong>. Tim kami akan segera menghubungi Anda.
+                <a href="<?= waLink($waMsg) ?>" target="_blank" class="btn btn-wa btn-sm ms-2">Konfirmasi via WhatsApp</a>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         <?php endif; ?>
         <?php if ($bookingError): ?>
-        <div class="alert alert-danger alert-dismissible fade show"><?= e($bookingError) ?><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+            <div class="alert alert-danger alert-dismissible fade show"><?= e($bookingError) ?><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
         <?php endif; ?>
 
         <div class="row g-4">
@@ -90,9 +103,9 @@ require_once 'includes/header.php';
             <div class="col-lg-8">
                 <!-- Badges row -->
                 <div class="d-flex gap-2 mb-3 flex-wrap">
-                    <?php if ($tour['is_best_seller']): ?><span class="badge" style="background:var(--secondary);padding:.4rem .8rem;border-radius:100px"><i class="bi bi-star-fill"></i> Best Seller</span><?php endif; ?>
-                    <?php if ($tour['is_promo']): ?><span class="badge" style="background:var(--accent);padding:.4rem .8rem;border-radius:100px"><i class="bi bi-fire"></i> Promo</span><?php endif; ?>
-                    <span class="badge bg-light text-primary-custom border" style="padding:.4rem .8rem;border-radius:100px"><i class="bi bi-eye"></i> <?= $tour['view_count'] ?> views</span>
+                    <?php if ($tour['is_best_seller']): ?><span class="badge" style="background:var(--secondary);padding:.35rem .6rem;border-radius:4px;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px"><i class="bi bi-star-fill"></i> Best Seller</span><?php endif; ?>
+                    <?php if ($tour['is_promo']): ?><span class="badge" style="background:var(--accent);padding:.35rem .6rem;border-radius:4px;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px"><i class="bi bi-fire"></i> Promo</span><?php endif; ?>
+                    <span class="badge bg-light text-primary-custom border" style="padding:.35rem .6rem;border-radius:4px;font-size:.7rem"><i class="bi bi-eye"></i> <?= $tour['view_count'] ?> views</span>
                 </div>
 
                 <!-- Main Image -->
@@ -104,13 +117,13 @@ require_once 'includes/header.php';
 
                 <!-- Gallery -->
                 <?php if ($gallery): ?>
-                <div class="row g-2 mb-4">
-                    <?php foreach (array_slice($gallery, 0, 4) as $img): ?>
-                    <div class="col-3">
-                        <img src="<?= uploadUrl($img) ?>" class="w-100 rounded-2 detail-gallery" style="height:100px;object-fit:cover" alt="Gallery" onerror="handleImgError(this)">
+                    <div class="row g-2 mb-4">
+                        <?php foreach (array_slice($gallery, 0, 4) as $img): ?>
+                            <div class="col-3">
+                                <img src="<?= uploadUrl($img) ?>" class="w-100 rounded-2 detail-gallery" style="height:100px;object-fit:cover" alt="Gallery" onerror="handleImgError(this)">
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                    <?php endforeach; ?>
-                </div>
                 <?php endif; ?>
 
                 <!-- Info -->
@@ -129,61 +142,61 @@ require_once 'includes/header.php';
 
                 <!-- Itinerary -->
                 <?php if ($itinerary): ?>
-                <div class="mb-4">
-                    <h5 class="fw-bold mb-3">Itinerary</h5>
-                    <?php foreach ($itinerary as $day): ?>
-                    <div class="itinerary-day">
-                        <h6>Hari <?= $day['day'] ?? '' ?> - <?= e($day['title'] ?? '') ?></h6>
-                        <?php if (isset($day['activities'])): ?>
-                        <ul class="small text-muted">
-                            <?php foreach ($day['activities'] as $act): ?>
-                            <li><?= e($act) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <?php endif; ?>
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3">Itinerary</h5>
+                        <?php foreach ($itinerary as $day): ?>
+                            <div class="itinerary-day">
+                                <h6>Hari <?= $day['day'] ?? '' ?> - <?= e($day['title'] ?? '') ?></h6>
+                                <?php if (isset($day['activities'])): ?>
+                                    <ul class="small text-muted">
+                                        <?php foreach ($day['activities'] as $act): ?>
+                                            <li><?= e($act) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                    <?php endforeach; ?>
-                </div>
                 <?php endif; ?>
 
                 <!-- Facilities -->
                 <div class="row g-4 mb-4">
                     <?php if ($includes): ?>
-                    <div class="col-md-6">
-                        <h5 class="fw-bold mb-3">Fasilitas Termasuk</h5>
-                        <ul class="facility-list">
-                            <?php foreach ($includes as $item): ?>
-                            <li class="included"><i class="bi bi-check-circle-fill"></i><?= e($item) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-bold mb-3">Fasilitas Termasuk</h5>
+                            <ul class="facility-list">
+                                <?php foreach ($includes as $item): ?>
+                                    <li class="included"><i class="bi bi-check-circle-fill"></i><?= e($item) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
                     <?php endif; ?>
                     <?php if ($excludes): ?>
-                    <div class="col-md-6">
-                        <h5 class="fw-bold mb-3">Tidak Termasuk</h5>
-                        <ul class="facility-list">
-                            <?php foreach ($excludes as $item): ?>
-                            <li class="excluded"><i class="bi bi-x-circle-fill"></i><?= e($item) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-bold mb-3">Tidak Termasuk</h5>
+                            <ul class="facility-list">
+                                <?php foreach ($excludes as $item): ?>
+                                    <li class="excluded"><i class="bi bi-x-circle-fill"></i><?= e($item) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
                     <?php endif; ?>
                 </div>
 
                 <!-- Meeting Point -->
                 <?php if ($tour['meeting_point']): ?>
-                <div class="mb-4">
-                    <h5 class="fw-bold">Meeting Point</h5>
-                    <p class="text-muted"><i class="bi bi-pin-map me-1"></i><?= e($tour['meeting_point']) ?></p>
-                </div>
+                    <div class="mb-4">
+                        <h5 class="fw-bold">Meeting Point</h5>
+                        <p class="text-muted"><i class="bi bi-pin-map me-1"></i><?= e($tour['meeting_point']) ?></p>
+                    </div>
                 <?php endif; ?>
 
                 <!-- Terms -->
                 <?php if ($tour['terms']): ?>
-                <div class="mb-4">
-                    <h5 class="fw-bold">Syarat & Ketentuan</h5>
-                    <p class="text-muted small"><?= nl2br(e($tour['terms'])) ?></p>
-                </div>
+                    <div class="mb-4">
+                        <h5 class="fw-bold">Syarat & Ketentuan</h5>
+                        <p class="text-muted small"><?= nl2br(e($tour['terms'])) ?></p>
+                    </div>
                 <?php endif; ?>
             </div>
 
@@ -204,19 +217,20 @@ require_once 'includes/header.php';
                     </div>
                     <hr>
                     <h6 class="fw-bold mb-3">Form Booking</h6>
-                    <form method="POST" action="">
+                    <?php $bu = isUserLoggedIn() ? getLoggedInUser() : null; ?>
+                    <form method="POST" action="" onsubmit="return checkLoginBeforeSubmit(this)">
                         <input type="hidden" name="book_tour" value="1">
                         <div class="mb-3">
                             <label class="form-label small fw-semibold">Nama Lengkap *</label>
-                            <input type="text" name="customer_name" class="form-control" required>
+                            <input type="text" name="customer_name" class="form-control" required value="<?= e($bu['full_name'] ?? $bu['username'] ?? '') ?>">
                         </div>
                         <div class="mb-3">
                             <label class="form-label small fw-semibold">Nomor WhatsApp *</label>
-                            <input type="text" name="customer_whatsapp" class="form-control" placeholder="08xxxxxxxxxx" required>
+                            <input type="text" name="customer_whatsapp" class="form-control" placeholder="08xxxxxxxxxx" required value="<?= e($bu['phone'] ?? '') ?>">
                         </div>
                         <div class="mb-3">
                             <label class="form-label small fw-semibold">Email (opsional)</label>
-                            <input type="email" name="customer_email" class="form-control">
+                            <input type="email" name="customer_email" class="form-control" value="<?= e($bu['email'] ?? '') ?>">
                         </div>
                         <div class="mb-3">
                             <label class="form-label small fw-semibold">Tanggal Keberangkatan</label>
@@ -235,7 +249,7 @@ require_once 'includes/header.php';
                         </button>
                     </form>
                     <a href="<?= waLink("Halo DNA Vacation, saya tertarik dengan paket: {$tour['title']}. Bisa info lebih lanjut?") ?>"
-                       target="_blank" class="btn btn-wa w-100">
+                        target="_blank" class="btn btn-wa w-100">
                         <i class="bi bi-whatsapp me-1"></i>Tanya via WhatsApp
                     </a>
                 </div>
@@ -244,75 +258,35 @@ require_once 'includes/header.php';
 
         <!-- Related Tours -->
         <?php if ($relatedTours): ?>
-        <div class="mt-5">
-            <h4 class="fw-bold mb-4">Paket Tour Serupa</h4>
-            <div class="row g-4">
-                <?php foreach ($relatedTours as $rt): ?>
-                <div class="col-md-4">
-                    <div class="card tour-card position-relative">
-                        <?php if ($rt['image']): ?>
-                            <img src="<?= uploadUrl($rt['image']) ?>" class="card-img-top" alt="<?= e($rt['title']) ?>" onerror="handleImgError(this)">
-                        <?php else: ?>
-                            <div class="card-img-top placeholder-img" style="height:200px"><i class="bi bi-image"></i></div>
-                        <?php endif; ?>
-                        <div class="card-body">
-                            <div class="card-meta">
-                                <span><i class="bi bi-geo-alt me-1"></i><?= e($rt['destination_name'] ?? '-') ?></span>
-                                <span><i class="bi bi-clock me-1"></i><?= e($rt['duration']) ?></span>
-                            </div>
-                            <h6 class="card-title"><?= e($rt['title']) ?></h6>
-                            <div class="d-flex justify-content-between align-items-center mt-2">
-                                <span class="price"><?= formatRupiah($rt['price']) ?> <small>/orang</small></span>
-                                <a href="<?= BASE_URL ?>/tour-detail.php?slug=<?= e($rt['slug']) ?>" class="btn btn-primary-custom btn-sm">Detail</a>
+            <div class="mt-5">
+                <h4 class="fw-bold mb-4">Paket Tour Serupa</h4>
+                <div class="row g-4">
+                    <?php foreach ($relatedTours as $rt): ?>
+                        <div class="col-md-4">
+                            <div class="card tour-card position-relative">
+                                <?php if ($rt['image']): ?>
+                                    <img src="<?= uploadUrl($rt['image']) ?>" class="card-img-top" alt="<?= e($rt['title']) ?>" onerror="handleImgError(this)">
+                                <?php else: ?>
+                                    <div class="card-img-top placeholder-img" style="height:200px"><i class="bi bi-image"></i></div>
+                                <?php endif; ?>
+                                <div class="card-body">
+                                    <div class="card-meta">
+                                        <span><i class="bi bi-geo-alt me-1"></i><?= e($rt['destination_name'] ?? '-') ?></span>
+                                        <span><i class="bi bi-clock me-1"></i><?= e($rt['duration']) ?></span>
+                                    </div>
+                                    <h6 class="card-title"><?= e($rt['title']) ?></h6>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <span class="price"><?= formatRupiah($rt['price']) ?> <small>/orang</small></span>
+                                        <a href="<?= BASE_URL ?>/tour-detail.php?slug=<?= e($rt['slug']) ?>" class="btn btn-primary-custom btn-sm">Detail</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
             </div>
-        </div>
         <?php endif; ?>
     </div>
 </section>
 
 <?php require_once 'includes/footer.php'; ?>
-=======
-include "db.php";
-
-if (!isset($_GET['id'])) {
-    header("Location: tour.php");
-    exit;
-}
-
-$id = (int)$_GET['id'];
-$q = mysqli_query($conn, "SELECT * FROM tour WHERE id=$id");
-$tour = mysqli_fetch_assoc($q);
-
-if (!$tour) {
-    echo "Tour tidak ditemukan";
-    exit;
-}
-?>
-
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-    <title><?= htmlspecialchars($tour['judul']); ?></title>
-</head>
-
-<body>
-
-    <img src="uploads/<?= $tour['gambar']; ?>" width="100%">
-
-    <h1><?= $tour['judul']; ?></h1>
-    <p>⏱ <?= $tour['durasi']; ?> | 📍 <?= $tour['lokasi']; ?></p>
-    <p><strong>Rp <?= number_format($tour['harga']); ?></strong></p>
-
-    <h3>Deskripsi</h3>
-    <p><?= nl2br($tour['deskripsi']); ?></p>
-
-</body>
-
-</html>
->>>>>>> 20a16d92d2a393b6d0f29d71daee7f38359db22d

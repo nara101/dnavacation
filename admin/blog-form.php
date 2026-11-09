@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'meta_title' => trim($_POST['meta_title']),
         'meta_description' => trim($_POST['meta_description']),
         'is_published' => $isPublished,
-        'author_id' => $_SESSION['admin_id'] ?? 1,
+        'author_id' => $_SESSION['user_id'] ?? 1,
     ];
 
     // Set published_at when publishing for first time

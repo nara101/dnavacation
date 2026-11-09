@@ -9,22 +9,31 @@ CREATE DATABASE IF NOT EXISTS dna_vacation
 
 USE dna_vacation;
 
--- ---------- ADMIN USERS ----------
-DROP TABLE IF EXISTS admin_users;
-CREATE TABLE admin_users (
+-- ---------- USERS (unified: user + admin) ----------
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL UNIQUE,
+  email VARCHAR(150) NOT NULL UNIQUE,
+  phone VARCHAR(20) NOT NULL DEFAULT '',
   password VARCHAR(255) NOT NULL,
-  full_name VARCHAR(100) NOT NULL,
-  email VARCHAR(100),
-  role ENUM('superadmin','admin','editor') DEFAULT 'admin',
+  full_name VARCHAR(100) DEFAULT NULL,
+  role ENUM('user','admin') DEFAULT 'user',
+  is_verified TINYINT(1) DEFAULT 0,
+  verification_token VARCHAR(64) DEFAULT NULL,
+  verification_expires DATETIME DEFAULT NULL,
+  reset_token VARCHAR(64) DEFAULT NULL,
+  reset_expires DATETIME DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_email (email),
+  KEY idx_verification_token (verification_token),
+  KEY idx_reset_token (reset_token)
 ) ENGINE=InnoDB;
 
--- Default admin: admin / admin123 (CHANGE THIS!)
-INSERT INTO admin_users (username, password, full_name, email, role) VALUES
-('admin', '$2y$10$WlVjPJxVPSfzAnd5tOFRvuzS//4vxb./S0xgP4F.R2b8UL3fX9iwy', 'Administrator DNA', 'admin@dnavacation.com', 'superadmin');
+-- Default admin: admin@dnavacation.com / admin123 (CHANGE THIS!)
+INSERT INTO users (username, email, phone, password, full_name, role, is_verified) VALUES
+('admin', 'admin@dnavacation.com', '082349627779', '$2y$10$WlVjPJxVPSfzAnd5tOFRvuzS//4vxb./S0xgP4F.R2b8UL3fX9iwy', 'Administrator DNA', 'admin', 1);
 
 -- ---------- SITE SETTINGS ----------
 DROP TABLE IF EXISTS site_settings;
@@ -38,11 +47,11 @@ CREATE TABLE site_settings (
 INSERT INTO site_settings (setting_key, setting_value) VALUES
 ('site_name', 'DNA Vacation'),
 ('site_tagline', 'Your Journey, Our Passion'),
-('whatsapp_number', '6285242000900'),
+('whatsapp_number', '6285757253329'),
 ('instagram_url', 'https://www.instagram.com/dnavacation/'),
 ('email', 'info@dnavacation.com'),
 ('address', 'Surabaya, Jawa Timur, Indonesia'),
-('phone', '+62 852-4200-0900'),
+('phone', '+628575725332'),
 ('about_text', 'DNA Vacation adalah travel agent kepercayaan Anda untuk menjelajahi keindahan Indonesia. Kami menyediakan paket tour, rental mobil, dan booking hotel dengan pelayanan profesional dan harga terbaik. Berpusat di Sulawesi, kami mengkhususkan diri dalam destinasi Timur Indonesia yang eksotis: Toraja, Wakatobi, Bunaken, Labuan Bajo, hingga Raja Ampat.'),
 ('vision', 'Menjadi travel agent terdepan di Indonesia Timur yang menghadirkan pengalaman liburan tak terlupakan dengan pelayanan berkualitas tinggi.'),
 ('mission', 'Menyediakan paket wisata berkualitas dengan harga kompetitif, memberikan pelayanan personal 24/7 via WhatsApp, membangun kepercayaan melalui transparansi, dan mempromosikan pariwisata Indonesia Timur ke dunia.'),
@@ -358,7 +367,7 @@ CREATE TABLE blog_posts (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (category_id) REFERENCES blog_categories(id) ON DELETE SET NULL,
-  FOREIGN KEY (author_id) REFERENCES admin_users(id) ON DELETE SET NULL,
+  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE SET NULL,
   INDEX idx_published (is_published),
   INDEX idx_slug (slug)
 ) ENGINE=InnoDB;
@@ -487,4 +496,28 @@ CREATE TABLE contact_messages (
   message TEXT NOT NULL,
   is_read TINYINT(1) DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- ---------- HOTELS ----------
+DROP TABLE IF EXISTS hotels;
+CREATE TABLE hotels (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  destination_id INT NOT NULL,
+  name VARCHAR(200) NOT NULL,
+  star_rating TINYINT DEFAULT 3,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_dest_star (destination_id, star_rating),
+  FOREIGN KEY (destination_id) REFERENCES destinations(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------- ATTRACTIONS ----------
+DROP TABLE IF EXISTS attractions;
+CREATE TABLE attractions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  destination_id INT NOT NULL,
+  name VARCHAR(200) NOT NULL,
+  description VARCHAR(500) DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_destination (destination_id),
+  FOREIGN KEY (destination_id) REFERENCES destinations(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;

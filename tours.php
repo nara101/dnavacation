@@ -24,8 +24,13 @@ if (!empty($_GET['max_price'])) {
     $params[] = (int)$_GET['max_price'];
 }
 if (!empty($_GET['duration'])) {
-    $where[] = 't.duration_days = ?';
-    $params[] = (int)$_GET['duration'];
+    if ($_GET['duration'] === '6plus') {
+        $where[] = 't.duration_days >= ?';
+        $params[] = 6;
+    } else {
+        $where[] = 't.duration_days = ?';
+        $params[] = (int)$_GET['duration'];
+    }
 }
 
 $sort = 'ORDER BY t.is_best_seller DESC, t.sort_order ASC, t.created_at DESC';
@@ -59,7 +64,7 @@ $allCategories = $pdo->query("SELECT * FROM tour_categories ORDER BY name")->fet
 
 <div class="page-header">
     <div class="container">
-        <h1>Paket <span class="script">Tour</span></h1>
+        <h1>Paket Tour</h1>
         <p>Temukan paket tour terbaik untuk liburan impian Anda</p>
     </div>
 </div>
@@ -98,10 +103,12 @@ $allCategories = $pdo->query("SELECT * FROM tour_categories ORDER BY name")->fet
                             <label class="form-label small fw-semibold">Durasi</label>
                             <select name="duration" class="form-select">
                                 <option value="">Semua Durasi</option>
+                                <option value="1" <?= ($_GET['duration'] ?? '') == '1' ? 'selected' : '' ?>>1 Hari</option>
                                 <option value="2" <?= ($_GET['duration'] ?? '') == '2' ? 'selected' : '' ?>>2 Hari</option>
                                 <option value="3" <?= ($_GET['duration'] ?? '') == '3' ? 'selected' : '' ?>>3 Hari</option>
                                 <option value="4" <?= ($_GET['duration'] ?? '') == '4' ? 'selected' : '' ?>>4 Hari</option>
                                 <option value="5" <?= ($_GET['duration'] ?? '') == '5' ? 'selected' : '' ?>>5 Hari</option>
+                                <option value="6plus" <?= ($_GET['duration'] ?? '') == '6plus' ? 'selected' : '' ?>>&gt; 5 Hari</option>
                             </select>
                         </div>
                         <div class="mb-3">

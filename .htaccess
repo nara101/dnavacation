@@ -1,16 +1,20 @@
-RewriteEngine On
-RewriteBase /dna-vacation/
+# Pastikan index.php yang dijadikan halaman utama
+DirectoryIndex index.php index.html
 
 # Block access to sensitive files
 <FilesMatch "\.(sql|md|txt|log)$">
-    Order Allow,Deny
-    Deny from all
+    Require all denied
 </FilesMatch>
 
 # Block directory listing
 Options -Indexes
 
-# PHP settings
-php_value upload_max_filesize 10M
-php_value post_max_size 12M
-php_value max_execution_time 300
+# PHP settings — hanya jalan kalau server pakai mod_php.
+# Kalau server pakai PHP-FPM/FastCGI (umum di shared hosting) baris ini
+# menyebabkan Error 500. Hapus blok ini bila website error setelah deploy,
+# lalu atur nilainya lewat php.ini / control panel hosting.
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 12M
+    php_value max_execution_time 300
+</IfModule>

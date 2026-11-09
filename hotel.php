@@ -5,6 +5,13 @@ require_once 'includes/header.php';
 $success = false;
 $waMsg = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_hotel'])) {
+    if (!isUserLoggedIn()) {
+        $_SESSION['login_redirect'] = BASE_URL . '/hotel.php';
+        setFlash('warning', 'Silakan login terlebih dahulu untuk mengirim request hotel.');
+        header('Location: ' . BASE_URL . '/user-login.php');
+        exit;
+    }
+
     $name = trim($_POST['customer_name'] ?? '');
     $wa = trim($_POST['customer_whatsapp'] ?? '');
     $dest = trim($_POST['destination'] ?? '');
@@ -37,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_hotel'])) {
 
 <div class="page-header">
     <div class="container">
-        <h1>Booking <span class="script">Hotel</span></h1>
+        <h1>Booking Hotel</h1>
         <p>Bingung cari hotel? Ceritakan kebutuhan Anda, kami carikan yang terbaik!</p>
     </div>
 </div>
@@ -64,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_hotel'])) {
 
         <div class="row g-4 mb-5">
             <div class="col-lg-6">
-                <h3 class="fw-bold mb-3">Kenapa Booking Hotel via DNA Vacation?</h3>
+                <h3 class="fw-bold mb-3">Kenapa Booking Hotel via DNA VACATION?</h3>
                 <div class="mb-3">
                     <div class="d-flex gap-3 mb-3">
                         <div class="feature-icon flex-shrink-0"><i class="bi bi-search"></i></div>
@@ -109,16 +116,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_hotel'])) {
             <div class="col-lg-6">
                 <div class="booking-sidebar" style="position:static">
                     <h5 class="fw-bold mb-3"><i class="bi bi-file-earmark-text text-primary-custom"></i> Form Request Hotel</h5>
-                    <form method="POST">
+                    <?php $bu = isUserLoggedIn() ? getLoggedInUser() : null; ?>
+                    <form method="POST" onsubmit="return checkLoginBeforeSubmit(this)">
                         <input type="hidden" name="request_hotel" value="1">
                         <div class="row g-2">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label small fw-semibold">Nama <span class="text-danger">*</span></label>
-                                <input type="text" name="customer_name" class="form-control" required>
+                                <input type="text" name="customer_name" class="form-control" required value="<?= e($bu['full_name'] ?? $bu['username'] ?? '') ?>">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label small fw-semibold">WhatsApp <span class="text-danger">*</span></label>
-                                <input type="tel" name="customer_whatsapp" class="form-control" placeholder="08xxxxxxxxxx" required>
+                                <input type="tel" name="customer_whatsapp" class="form-control" placeholder="08xxxxxxxxxx" required value="<?= e($bu['phone'] ?? '') ?>">
                             </div>
                         </div>
                         <div class="mb-3">

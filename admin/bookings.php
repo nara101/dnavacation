@@ -39,6 +39,14 @@ $statuses = [
     'selesai' => 'Selesai',
     'dibatalkan' => 'Dibatalkan'
 ];
+
+$viewId = isset($_GET['view']) ? (int)$_GET['view'] : 0;
+$viewItem = null;
+if ($viewId) {
+    $s = $pdo->prepare("SELECT tb.*, t.title as tour_name FROM tour_bookings tb LEFT JOIN tours t ON tb.tour_id = t.id WHERE tb.id = ?");
+    $s->execute([$viewId]);
+    $viewItem = $s->fetch();
+}
 ?>
 
 <div class="p-3 p-md-4">
@@ -97,6 +105,7 @@ $statuses = [
                                         </form>
                                     </td>
                                     <td>
+                                        <a href="?view=<?= $b['id'] ?>" class="btn btn-sm btn-outline-primary" title="Detail"><i class="bi bi-eye"></i></a>
                                         <a href="https://wa.me/<?= e($b['customer_whatsapp']) ?>?text=<?= urlencode('Halo ' . $b['customer_name'] . ', terima kasih sudah booking di DNA Vacation. Booking Anda: ' . $b['booking_code']) ?>" target="_blank" class="btn btn-sm btn-success" title="Kirim WA"><i class="bi bi-whatsapp"></i></a>
                                         <a href="?delete=<?= $b['id'] ?>" class="btn btn-sm btn-outline-danger" data-confirm="Hapus booking ini?"><i class="bi bi-trash"></i></a>
                                     </td>
@@ -109,5 +118,57 @@ $statuses = [
         </div>
     </div>
 </div>
+
+<?php if ($viewItem): ?>
+<div class="modal fade show d-block" id="viewModal" tabindex="-1" style="background:rgba(0,0,0,.5)">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-journal-check text-primary-custom"></i> Detail Booking Tour</h5>
+                <a href="bookings.php" class="btn-close" aria-label="Close"></a>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <strong class="text-muted small text-uppercase">Data Pelanggan</strong>
+                        <div class="mt-2 p-3 rounded-3 bg-light">
+                            <div><i class="bi bi-person"></i> <strong><?= e($viewItem['customer_name']) ?></strong></div>
+                            <?php if ($viewItem['customer_email']): ?>
+                            <div class="small mt-1"><i class="bi bi-envelope"></i> <a href="mailto:<?= e($viewItem['customer_email']) ?>"><?= e($viewItem['customer_email']) ?></a></div>
+                            <?php endif; ?>
+                            <div class="small mt-1"><i class="bi bi-whatsapp text-success"></i> <a href="https://wa.me/<?= e($viewItem['customer_whatsapp']) ?>" target="_blank"><?= e($viewItem['customer_whatsapp']) ?></a></div>
+                            <div class="small mt-1 text-muted">Booking dibuat: <?= date('d M Y, H:i', strtotime($viewItem['created_at'])) ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <strong class="text-muted small text-uppercase">Detail Booking</strong>
+                        <div class="mt-2 p-3 rounded-3 bg-light">
+                            <div><i class="bi bi-hash"></i> Kode: <strong><?= e($viewItem['booking_code']) ?></strong></div>
+                            <div class="small mt-1"><i class="bi bi-map"></i> Paket: <strong><?= e($viewItem['tour_name'] ?? '-') ?></strong></div>
+                            <div class="small mt-1"><i class="bi bi-calendar"></i> Tanggal: <strong><?= $viewItem['departure_date'] ? date('d M Y', strtotime($viewItem['departure_date'])) : '-' ?></strong></div>
+                            <div class="small mt-1"><i class="bi bi-people"></i> Peserta: <strong><?= $viewItem['num_persons'] ?> orang</strong></div>
+                            <div class="small mt-1"><i class="bi bi-cash"></i> Total: <strong><?= formatRupiah($viewItem['total_price']) ?></strong></div>
+                            <div class="small mt-1"><i class="bi bi-flag"></i> Status: <span class="badge bg-<?= $viewItem['status'] === 'terkonfirmasi' || $viewItem['status'] === 'selesai' ? 'success' : ($viewItem['status'] === 'dibatalkan' ? 'danger' : 'warning') ?>"><?= $statuses[$viewItem['status']] ?? ucfirst($viewItem['status']) ?></span></div>
+                        </div>
+                    </div>
+                    <?php if ($viewItem['notes']): ?>
+                    <div class="col-12">
+                        <strong class="text-muted small text-uppercase">Catatan</strong>
+                        <div class="mt-2 p-3 rounded-3 bg-light small" style="white-space:pre-wrap"><?= e($viewItem['notes']) ?></div>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="https://wa.me/<?= e($viewItem['customer_whatsapp']) ?>?text=<?= urlencode('Halo ' . $viewItem['customer_name'] . ', terima kasih sudah booking di DNA Vacation. Kode booking Anda: ' . $viewItem['booking_code'] . '. Tim kami akan segera memproses pesanan Anda.') ?>" target="_blank" class="btn btn-wa"><i class="bi bi-whatsapp"></i> Balas via WA</a>
+                <?php if ($viewItem['customer_email']): ?>
+                <a href="mailto:<?= e($viewItem['customer_email']) ?>?subject=<?= urlencode('Konfirmasi Booking ' . $viewItem['booking_code'] . ' - DNA Vacation') ?>&body=<?= urlencode("Halo " . $viewItem['customer_name'] . ",\n\nTerima kasih telah melakukan booking di DNA Vacation.\n\nDetail Booking:\n- Kode: " . $viewItem['booking_code'] . "\n- Paket: " . ($viewItem['tour_name'] ?? '-') . "\n- Tanggal: " . ($viewItem['departure_date'] ? date('d M Y', strtotime($viewItem['departure_date'])) : '-') . "\n- Peserta: " . $viewItem['num_persons'] . " orang\n- Total: " . formatRupiah($viewItem['total_price']) . "\n\nSalam,\nTim DNA Vacation") ?>" class="btn btn-outline-primary"><i class="bi bi-envelope"></i> Balas via Email</a>
+                <?php endif; ?>
+                <a href="bookings.php" class="btn btn-secondary">Tutup</a>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

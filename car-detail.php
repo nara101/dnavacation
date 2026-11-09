@@ -18,6 +18,13 @@ $code = '';
 $waMsg = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_car'])) {
+    if (!isUserLoggedIn()) {
+        $_SESSION['login_redirect'] = $_SERVER['REQUEST_URI'];
+        setFlash('warning', 'Silakan login terlebih dahulu untuk melakukan booking.');
+        header('Location: ' . BASE_URL . '/user-login.php');
+        exit;
+    }
+
     $name = trim($_POST['customer_name'] ?? '');
     $wa = trim($_POST['customer_whatsapp'] ?? '');
     $startDate = $_POST['start_date'] ?? '';
@@ -71,7 +78,7 @@ require_once 'includes/header.php';
         <h1><?= e($car['name']) ?></h1>
         <div class="breadcrumb-custom">
             <a href="<?= BASE_URL ?>/">Home</a> <span>/</span>
-            <a href="<?= BASE_URL ?>/cars.php">Rent Mobil</a> <span>/</span>
+            <a href="<?= BASE_URL ?>/cars.php">Rent Car</a> <span>/</span>
             <span class="active"><?= e($car['name']) ?></span>
         </div>
     </div>
@@ -206,15 +213,16 @@ require_once 'includes/header.php';
             <div class="col-lg-4" id="booking">
                 <div class="booking-sidebar">
                     <h6 class="fw-bold mb-3"><i class="bi bi-calendar-check text-primary-custom"></i> Booking Mobil</h6>
-                    <form method="POST">
+                    <?php $bu = isUserLoggedIn() ? getLoggedInUser() : null; ?>
+                    <form method="POST" onsubmit="return checkLoginBeforeSubmit(this)">
                         <input type="hidden" name="book_car" value="1">
                         <div class="mb-3">
                             <label class="form-label small fw-semibold">Nama Lengkap <span class="text-danger">*</span></label>
-                            <input type="text" name="customer_name" class="form-control" required>
+                            <input type="text" name="customer_name" class="form-control" required value="<?= e($bu['full_name'] ?? $bu['username'] ?? '') ?>">
                         </div>
                         <div class="mb-3">
                             <label class="form-label small fw-semibold">Nomor WhatsApp <span class="text-danger">*</span></label>
-                            <input type="tel" name="customer_whatsapp" class="form-control" placeholder="08xxxxxxxxxx" required>
+                            <input type="tel" name="customer_whatsapp" class="form-control" placeholder="08xxxxxxxxxx" required value="<?= e($bu['phone'] ?? '') ?>">
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-8">

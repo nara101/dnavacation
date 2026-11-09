@@ -27,7 +27,7 @@ if (isset($_GET['toggle'])) {
     exit;
 }
 
-$posts = $pdo->query("SELECT bp.*, bc.name as cat_name, a.full_name as author_name FROM blog_posts bp LEFT JOIN blog_categories bc ON bp.category_id = bc.id LEFT JOIN admin_users a ON bp.author_id = a.id ORDER BY bp.created_at DESC")->fetchAll();
+$posts = $pdo->query("SELECT bp.*, bc.name as cat_name, a.full_name as author_name FROM blog_posts bp LEFT JOIN blog_categories bc ON bp.category_id = bc.id LEFT JOIN users a ON bp.author_id = a.id ORDER BY bp.created_at DESC")->fetchAll();
 ?>
 
 <div class="p-3 p-md-4">

@@ -1,6 +1,7 @@
 <?php
 $pageTitle = 'Pengaturan';
-require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/../includes/config.php';
+requireLogin();
 
 // Helper: handle single-image upload for site branding assets
 $uploadSiteImage = function($fileKey) {
@@ -30,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Tentang
         'about_text', 'vision', 'mission',
         // SEO
-        'meta_title', 'meta_description', 'footer_text', 'copyright_text',
+        'meta_title', 'meta_description', 'footer_text', 'footer_about_text', 'copyright_text',
         // Feature toggles
         'show_trust_strip', 'show_destinations', 'show_featured_cars',
         'show_testimonials_home', 'show_blog_home', 'show_cta',
@@ -70,6 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: settings.php' . (isset($_POST['tab']) ? '?tab=' . urlencode($_POST['tab']) : ''));
     exit;
 }
+
+require_once __DIR__ . '/includes/header.php';
 
 // Load settings
 $settingsRows = $pdo->query("SELECT setting_key, setting_value FROM site_settings")->fetchAll();
@@ -178,8 +181,8 @@ $currentTab = $_GET['tab'] ?? 'identitas';
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold small">Nama Brand di Navbar</label>
-                                        <input type="text" name="site_name" class="form-control" value="<?= e($val('site_name', 'DNA Vacation')) ?>">
-                                        <small class="text-muted">Sama dengan Nama Website di tab Identitas</small>
+                                        <input type="text" class="form-control bg-light" value="<?= e($val('site_name', 'DNA Vacation')) ?>" disabled>
+                                        <small class="text-muted">Diambil otomatis dari Nama Website di tab Identitas</small>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold small">Sub-brand / Tagline di Navbar (script)</label>
@@ -222,21 +225,13 @@ $currentTab = $_GET['tab'] ?? 'identitas';
                                             </div>
                                         <?php endif; ?>
                                     </div>
-                                    <div class="col-12">
-                                        <label class="form-label fw-semibold small">Badge Hero (di atas judul)</label>
-                                        <input type="text" name="hero_badge" class="form-control" value="<?= e($val('hero_badge', 'EXPLORE. DREAM. DISCOVER.')) ?>">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-semibold small">Judul (bagian awal)</label>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Judul Utama</label>
                                         <input type="text" name="hero_headline_before" class="form-control" value="<?= e($val('hero_headline_before', 'Discover Amazing')) ?>">
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-semibold small">Kata Script (gold, italic)</label>
-                                        <input type="text" name="hero_headline_script" class="form-control" value="<?= e($val('hero_headline_script', 'Places')) ?>" style="font-family:'Pacifico',cursive;color:var(--gold-dark)">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-semibold small">Judul (bagian akhir)</label>
-                                        <input type="text" name="hero_headline_after" class="form-control" value="<?= e($val('hero_headline_after', 'with Us')) ?>">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Kata Aksen (gold, baris kedua)</label>
+                                        <input type="text" name="hero_headline_script" class="form-control" value="<?= e($val('hero_headline_script', 'Indonesia Timur')) ?>" style="color:var(--gold-dark);font-weight:700">
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label fw-semibold small">Subheadline</label>
@@ -251,12 +246,10 @@ $currentTab = $_GET['tab'] ?? 'identitas';
                                         <input type="text" name="hero_cta_secondary" class="form-control" value="<?= e($val('hero_cta_secondary', 'Konsultasi Gratis')) ?>">
                                     </div>
                                 </div>
-                                <div class="mt-4 p-3 rounded-3" style="background:var(--primary-darker);color:#fff;background-image:linear-gradient(rgba(6,24,56,.6),rgba(6,24,56,.75)),url('<?= $heroSrc ? uploadUrl($heroSrc) : asset('img/nature.jpg') ?>');background-size:cover;background-position:center;min-height:200px">
-                                    <div class="p-2 small mb-2" style="background:rgba(255,255,255,.15);display:inline-block;border-radius:100px;padding:.3rem .8rem;font-size:.7rem"><?= e($val('hero_badge', 'EXPLORE.')) ?></div>
-                                    <h4 class="fw-bold mb-2" style="line-height:1.2">
-                                        <?= e($val('hero_headline_before', 'Discover Amazing')) ?>
-                                        <span style="font-family:'Pacifico',cursive;color:var(--gold-light);font-weight:400"><?= e($val('hero_headline_script', 'Places')) ?></span>
-                                        <?= e($val('hero_headline_after', 'with Us')) ?>
+                                <div class="mt-4 p-3 rounded-3" style="background:var(--primary-darker);color:#fff;background-image:linear-gradient(rgba(3,15,38,.6),rgba(3,15,38,.8)),url('<?= $heroSrc ? uploadUrl($heroSrc) : asset('img/nature.jpg') ?>');background-size:cover;background-position:center;min-height:200px">
+                                    <h4 class="fw-bold mb-2" style="line-height:1.1;text-transform:uppercase;letter-spacing:-1px">
+                                        <?= e($val('hero_headline_before', 'Discover Amazing')) ?><br>
+                                        <span style="color:var(--gold-light)"><?= e($val('hero_headline_script', 'Indonesia Timur')) ?></span>
                                     </h4>
                                     <p class="small opacity-75 mb-0"><?= e(truncate($val('hero_subheadline'), 100)) ?></p>
                                 </div>
@@ -330,8 +323,7 @@ $currentTab = $_GET['tab'] ?? 'identitas';
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label fw-semibold small">Deskripsi Singkat (di kolom pertama footer)</label>
-                                        <textarea name="about_text" class="form-control" rows="4"><?= e($val('about_text')) ?></textarea>
-                                        <small class="text-muted">Sama dengan "Tentang" — muncul di footer & halaman About</small>
+                                        <textarea name="footer_about_text" class="form-control" rows="4"><?= e($val('footer_about_text', $val('about_text'))) ?></textarea>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label fw-semibold small">Text Footer Tambahan</label>
@@ -350,12 +342,12 @@ $currentTab = $_GET['tab'] ?? 'identitas';
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold small">Nomor WhatsApp (link)</label>
-                                        <input type="text" name="whatsapp_number" class="form-control" value="<?= e($val('whatsapp_number')) ?>" placeholder="6281234567890">
+                                        <input type="text" name="whatsapp_number" class="form-control" value="<?= e($val('whatsapp_number')) ?>" placeholder="6282349627779">
                                         <small class="text-muted">Format: 62xxx (tanpa + atau spasi) — untuk link WhatsApp</small>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold small">Nomor Telepon (display)</label>
-                                        <input type="text" name="phone" class="form-control" value="<?= e($val('phone')) ?>" placeholder="+62 812-3456-7890">
+                                        <input type="text" name="phone" class="form-control" value="<?= e($val('phone')) ?>" placeholder="082349627779">
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold small">Email</label>

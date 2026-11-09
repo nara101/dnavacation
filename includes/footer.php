@@ -10,7 +10,7 @@
                             <div class="footer-brand-tag"><?= e(getSetting('footer_tagline') ?: "It's More Than Fun") ?></div>
                         </div>
                     </div>
-                    <p class="text-white-50 small mb-3 mt-3"><?= e(getSetting('about_text') ?: 'Travel agent terpercaya untuk liburan impian Anda.') ?></p>
+                    <p class="text-white-50 small mb-3 mt-3"><?= e(getSetting('footer_about_text') ?: getSetting('about_text') ?: 'Travel agent terpercaya untuk liburan impian Anda.') ?></p>
                     <div class="d-flex gap-2 mt-3">
                         <?php if (getSetting('instagram_url')): ?>
                         <a href="<?= e(getSetting('instagram_url')) ?>" target="_blank" class="d-inline-flex align-items-center justify-content-center text-white" style="width:38px;height:38px;background:rgba(255,255,255,.08);border-radius:10px" title="Instagram">
@@ -41,7 +41,7 @@
                     <h6 class="fw-semibold mb-3">Layanan</h6>
                     <ul class="list-unstyled small">
                         <li class="mb-2"><a href="<?= BASE_URL ?>/tours.php" class="text-white-50 text-decoration-none">Paket Tour</a></li>
-                        <li class="mb-2"><a href="<?= BASE_URL ?>/cars.php" class="text-white-50 text-decoration-none">Rent Mobil</a></li>
+                        <li class="mb-2"><a href="<?= BASE_URL ?>/cars.php" class="text-white-50 text-decoration-none">Rent Car</a></li>
                         <li class="mb-2"><a href="<?= BASE_URL ?>/hotel.php" class="text-white-50 text-decoration-none">Booking Hotel</a></li>
                         <li class="mb-2"><a href="<?= BASE_URL ?>/custom-trip.php" class="text-white-50 text-decoration-none">Custom Trip</a></li>
                     </ul>
@@ -58,7 +58,7 @@
                 <div class="col-lg-4">
                     <h6 class="fw-semibold mb-3">Kontak Kami</h6>
                     <ul class="list-unstyled small text-white-50">
-                        <li class="mb-2 d-flex gap-2"><i class="bi bi-whatsapp text-success mt-1"></i><span><?= e(getSetting('phone') ?: '+62 812-3456-7890') ?></span></li>
+                        <li class="mb-2 d-flex gap-2"><i class="bi bi-whatsapp text-success mt-1"></i><span><?= e(getSetting('phone') ?: '082349627779') ?></span></li>
                         <?php if (getSetting('email')): ?>
                         <li class="mb-2 d-flex gap-2"><i class="bi bi-envelope mt-1"></i><span><?= e(getSetting('email')) ?></span></li>
                         <?php endif; ?>
@@ -96,6 +96,29 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?= asset('js/main.js') ?>"></script>
+    <script>
+    var IS_LOGGED_IN = <?= isUserLoggedIn() ? 'true' : 'false' ?>;
+    var LOGIN_URL = '<?= BASE_URL ?>/user-login.php';
+    var REGISTER_URL = '<?= BASE_URL ?>/register.php';
+    function checkLoginBeforeSubmit(form) {
+        if (IS_LOGGED_IN) return true;
+        var overlay = document.createElement('div');
+        overlay.className = 'login-required-overlay';
+        overlay.innerHTML = '<div class="login-required-card">' +
+            '<i class="bi bi-person-lock" style="font-size:3rem;color:#0B2545"></i>' +
+            '<h5 style="font-weight:700;margin:.75rem 0 .5rem">Login Diperlukan</h5>' +
+            '<p style="color:#64748B;font-size:.9rem;margin-bottom:1.25rem">Anda harus login terlebih dahulu untuk mengirim form ini. Data yang sudah Anda isi tidak akan hilang.</p>' +
+            '<div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">' +
+            '<a href="' + LOGIN_URL + '" class="btn btn-primary-custom">Login</a>' +
+            '<a href="' + REGISTER_URL + '" class="btn btn-outline-primary-custom">Daftar</a>' +
+            '</div>' +
+            '<button onclick="this.closest(\'.login-required-overlay\').remove()" style="margin-top:1rem;background:none;border:none;color:#94A3B8;font-size:.85rem;cursor:pointer">Batal</button>' +
+            '</div>';
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+        return false;
+    }
+    </script>
     </body>
 
     </html>

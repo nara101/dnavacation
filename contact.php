@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
 
 <div class="page-header">
     <div class="container">
-        <h1>Kontak <span class="script">Kami</span></h1>
+        <h1>Kontak Kami</h1>
         <p>Ada pertanyaan? Kami siap membantu Anda kapan saja!</p>
     </div>
 </div>
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
                     <div class="feature-icon flex-shrink-0" style="background:#DCFCE7;color:#16A34A"><i class="bi bi-whatsapp"></i></div>
                     <div>
                         <h6 class="fw-bold mb-1">WhatsApp</h6>
-                        <p class="text-muted mb-0"><?= e(getSetting('phone') ?: '+62 812-3456-7890') ?></p>
+                        <p class="text-muted mb-0"><?= e(getSetting('phone') ?: '082349627779') ?></p>
                         <a href="<?= waLink('Halo DNA Vacation!') ?>" target="_blank" class="small text-success">Chat sekarang <i class="bi bi-arrow-right"></i></a>
                     </div>
                 </div>

@@ -28,6 +28,19 @@ if (isset($_GET['toggle'])) {
 
 // Add/Edit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Guard 1: POST melebihi post_max_size -> $_POST kosong. Jangan simpan baris kosong.
+    if (empty($_POST) && (int)($_SERVER['CONTENT_LENGTH'] ?? 0) > 0) {
+        setFlash('danger', 'Upload gagal: file terlalu besar untuk server (batas ' . ini_get('upload_max_filesize') . '). Kompres video atau naikkan batas upload di hPanel Hostinger.');
+        header('Location: testimonials.php');
+        exit;
+    }
+    // Guard 2: nama & isi wajib -> cegah baris kosong.
+    if (trim($_POST['customer_name'] ?? '') === '' || trim($_POST['content'] ?? '') === '') {
+        setFlash('danger', 'Nama Pelanggan dan Isi Testimoni wajib diisi (data tidak tersimpan). Jika kamu melampirkan video besar, kemungkinan file melebihi batas server sehingga data form ikut terpotong.');
+        header('Location: testimonials.php');
+        exit;
+    }
+
     $data = [
         'customer_name' => trim($_POST['customer_name']),
         'customer_location' => trim($_POST['customer_location']),
@@ -41,6 +54,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_FILES['image']['name'])) {
         $img = uploadImage($_FILES['image'], 'testimonials');
         if ($img) $data['image'] = $img;
+    }
+
+    // Video berupa LINK YouTube / Google Drive.
+    $videoUrl = trim($_POST['video_url'] ?? '');
+    if ($videoUrl !== '' && preg_match('#^https?://#i', $videoUrl)) {
+        $data['video'] = $videoUrl;
+    }
+
+    if (isset($_POST['remove_video']) && $_POST['remove_video'] === '1') {
+        $data['video'] = null;
     }
 
     $editId = (int)($_POST['edit_id'] ?? 0);
@@ -136,6 +159,29 @@ $pendingCount = (int)$pdo->query("SELECT COUNT(*) FROM testimonials WHERE is_act
                         <label class="form-label small fw-semibold">Foto</label>
                         <input type="file" name="image" class="form-control" accept="image/*">
                     </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold"><i class="bi bi-camera-video"></i> Link Video</label>
+                        <input type="url" name="video_url" class="form-control" placeholder="Link YouTube / Google Drive" value="<?= e(isVideoUrl($editItem['video'] ?? '') ? $editItem['video'] : '') ?>">
+                        <small class="text-muted">Tempel link YouTube atau Google Drive</small>
+                        <?php if (!empty($editItem['video'])): $aEmbed = videoEmbedUrl($editItem['video']); ?>
+                            <div class="mt-2">
+                                <?php if ($aEmbed): ?>
+                                    <div style="position:relative;padding-top:56.25%;background:#000;border-radius:.375rem;overflow:hidden">
+                                        <iframe src="<?= e($aEmbed) ?>" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy" title="Video"></iframe>
+                                    </div>
+                                <?php elseif (isVideoUrl($editItem['video'])): ?>
+                                    <a href="<?= e($editItem['video']) ?>" target="_blank" rel="noopener" class="small"><i class="bi bi-box-arrow-up-right"></i> Buka link video</a>
+                                <?php else: ?>
+                                    <video controls preload="metadata" style="width:100%;max-height:120px;border-radius:.375rem;background:#000">
+                                        <source src="<?= uploadUrl($editItem['video']) ?>">
+                                    </video>
+                                <?php endif; ?>
+                                <label class="form-check-label small mt-1 d-block">
+                                    <input type="checkbox" name="remove_video" value="1" class="form-check-input"> Hapus video
+                                </label>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                     <div class="col-md-1 d-flex align-items-end">
                         <div class="form-check">
                             <input type="checkbox" name="is_active" class="form-check-input" id="tActive" <?= ($editItem['is_active'] ?? 1) ? 'checked' : '' ?>>
@@ -191,7 +237,10 @@ $pendingCount = (int)$pdo->query("SELECT COUNT(*) FROM testimonials WHERE is_act
                                     </td>
                                     <td class="small"><?= e($t['tour_name'] ?: '-') ?></td>
                                     <td class="text-warning small"><?= str_repeat('★', $t['rating']) ?><?= str_repeat('☆', 5 - $t['rating']) ?></td>
-                                    <td class="small" style="max-width:300px"><?= e(truncate($t['content'], 100)) ?></td>
+                                    <td class="small" style="max-width:300px">
+                                        <?php if (!empty($t['video'])): ?><span class="badge bg-info text-dark me-1" style="font-size:.65rem"><i class="bi bi-camera-video-fill"></i> Video</span><?php endif; ?>
+                                        <?= e(truncate($t['content'], 100)) ?>
+                                    </td>
                                     <td>
                                         <?php if ($t['is_active']): ?>
                                             <a href="?toggle=<?= $t['id'] ?>" class="badge bg-success text-decoration-none" style="font-size:.7rem">Tampil</a>

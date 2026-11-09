@@ -2,34 +2,46 @@
 $pageTitle = 'Dashboard';
 require_once __DIR__ . '/includes/header.php';
 
-// ---- Core counts ----
-$totalTours       = (int)$pdo->query("SELECT COUNT(*) FROM tours")->fetchColumn();
-$activeTours      = (int)$pdo->query("SELECT COUNT(*) FROM tours WHERE is_active=1")->fetchColumn();
-$totalCars        = (int)$pdo->query("SELECT COUNT(*) FROM cars")->fetchColumn();
-$availableCars    = (int)$pdo->query("SELECT COUNT(*) FROM cars WHERE is_available=1")->fetchColumn();
-$totalBlog        = (int)$pdo->query("SELECT COUNT(*) FROM blog_posts")->fetchColumn();
-$publishedBlog    = (int)$pdo->query("SELECT COUNT(*) FROM blog_posts WHERE is_published=1")->fetchColumn();
-$totalTesti       = (int)$pdo->query("SELECT COUNT(*) FROM testimonials")->fetchColumn();
-$activeTesti      = (int)$pdo->query("SELECT COUNT(*) FROM testimonials WHERE is_active=1")->fetchColumn();
+$totalTours = $activeTours = $totalCars = $availableCars = 0;
+$totalBlog = $publishedBlog = $totalTesti = $activeTesti = 0;
+$totalTourBookings = $totalCarBookings = $totalHotelReq = $totalCustom = 0;
+$revenueThisMonth = $revenueCarMonth = $revenueTotal = 0;
+$totalDestinations = $totalHotels = $totalAttractions = $totalCategories = 0;
+$recentTourBookings = $recentCarBookings = $pendingTestimonials = $topTours = [];
 
-// ---- Incoming requests (needs attention) ----
-$totalTourBookings = (int)$pdo->query("SELECT COUNT(*) FROM tour_bookings")->fetchColumn();
-$totalCarBookings  = (int)$pdo->query("SELECT COUNT(*) FROM car_bookings")->fetchColumn();
-$totalHotelReq     = (int)$pdo->query("SELECT COUNT(*) FROM hotel_requests")->fetchColumn();
-$totalCustom       = (int)$pdo->query("SELECT COUNT(*) FROM custom_trip_requests")->fetchColumn();
+try {
+    $totalTours       = (int)$pdo->query("SELECT COUNT(*) FROM tours")->fetchColumn();
+    $activeTours      = (int)$pdo->query("SELECT COUNT(*) FROM tours WHERE is_active=1")->fetchColumn();
+    $totalCars        = (int)$pdo->query("SELECT COUNT(*) FROM cars")->fetchColumn();
+    $availableCars    = (int)$pdo->query("SELECT COUNT(*) FROM cars WHERE is_available=1")->fetchColumn();
+    $totalBlog        = (int)$pdo->query("SELECT COUNT(*) FROM blog_posts")->fetchColumn();
+    $publishedBlog    = (int)$pdo->query("SELECT COUNT(*) FROM blog_posts WHERE is_published=1")->fetchColumn();
+    $totalTesti       = (int)$pdo->query("SELECT COUNT(*) FROM testimonials")->fetchColumn();
+    $activeTesti      = (int)$pdo->query("SELECT COUNT(*) FROM testimonials WHERE is_active=1")->fetchColumn();
 
-// ---- Revenue ----
-$revenueThisMonth = (int)$pdo->query("SELECT COALESCE(SUM(total_price),0) FROM tour_bookings WHERE MONTH(created_at)=MONTH(NOW()) AND YEAR(created_at)=YEAR(NOW()) AND status IN ('terkonfirmasi','selesai')")->fetchColumn();
-$revenueCarMonth  = (int)$pdo->query("SELECT COALESCE(SUM(total_price),0) FROM car_bookings WHERE MONTH(created_at)=MONTH(NOW()) AND YEAR(created_at)=YEAR(NOW()) AND status IN ('terkonfirmasi','selesai')")->fetchColumn();
-$revenueTotal     = $revenueThisMonth + $revenueCarMonth;
+    $totalTourBookings = (int)$pdo->query("SELECT COUNT(*) FROM tour_bookings")->fetchColumn();
+    $totalCarBookings  = (int)$pdo->query("SELECT COUNT(*) FROM car_bookings")->fetchColumn();
+    $totalHotelReq     = (int)$pdo->query("SELECT COUNT(*) FROM hotel_requests")->fetchColumn();
+    $totalCustom       = (int)$pdo->query("SELECT COUNT(*) FROM custom_trip_requests")->fetchColumn();
 
-// ---- Recent activity ----
-$recentTourBookings   = $pdo->query("SELECT tb.*, t.title as tour_name FROM tour_bookings tb LEFT JOIN tours t ON tb.tour_id = t.id ORDER BY tb.created_at DESC LIMIT 5")->fetchAll();
-$recentCarBookings    = $pdo->query("SELECT cb.*, c.name as car_name FROM car_bookings cb LEFT JOIN cars c ON cb.car_id = c.id ORDER BY cb.created_at DESC LIMIT 5")->fetchAll();
-$pendingTestimonials  = $pdo->query("SELECT * FROM testimonials WHERE is_active=0 ORDER BY created_at DESC LIMIT 5")->fetchAll();
-$topTours             = $pdo->query("SELECT title, view_count, price FROM tours WHERE is_active=1 ORDER BY view_count DESC LIMIT 5")->fetchAll();
+    $revenueThisMonth = (int)$pdo->query("SELECT COALESCE(SUM(total_price),0) FROM tour_bookings WHERE MONTH(created_at)=MONTH(NOW()) AND YEAR(created_at)=YEAR(NOW()) AND status IN ('terkonfirmasi','selesai')")->fetchColumn();
+    $revenueCarMonth  = (int)$pdo->query("SELECT COALESCE(SUM(total_price),0) FROM car_bookings WHERE MONTH(created_at)=MONTH(NOW()) AND YEAR(created_at)=YEAR(NOW()) AND status IN ('terkonfirmasi','selesai')")->fetchColumn();
+    $revenueTotal     = $revenueThisMonth + $revenueCarMonth;
 
-// Total items needing attention
+    $totalDestinations = (int)$pdo->query("SELECT COUNT(*) FROM destinations")->fetchColumn();
+    $totalCategories   = (int)$pdo->query("SELECT COUNT(*) FROM tour_categories")->fetchColumn();
+
+    try { $totalHotels = (int)$pdo->query("SELECT COUNT(*) FROM hotels")->fetchColumn(); } catch (PDOException $e) {}
+    try { $totalAttractions = (int)$pdo->query("SELECT COUNT(*) FROM attractions")->fetchColumn(); } catch (PDOException $e) {}
+
+    $recentTourBookings   = $pdo->query("SELECT tb.*, t.title as tour_name FROM tour_bookings tb LEFT JOIN tours t ON tb.tour_id = t.id ORDER BY tb.created_at DESC LIMIT 5")->fetchAll();
+    $recentCarBookings    = $pdo->query("SELECT cb.*, c.name as car_name FROM car_bookings cb LEFT JOIN cars c ON cb.car_id = c.id ORDER BY cb.created_at DESC LIMIT 5")->fetchAll();
+    $pendingTestimonials  = $pdo->query("SELECT * FROM testimonials WHERE is_active=0 ORDER BY created_at DESC LIMIT 5")->fetchAll();
+    $topTours             = $pdo->query("SELECT title, view_count, price FROM tours WHERE is_active=1 ORDER BY view_count DESC LIMIT 5")->fetchAll();
+} catch (PDOException $e) {
+    // Gracefully degrade — dashboard shows with zero counts
+}
+
 $needsAttention = $newTourBookings + $newCarBookings + $newHotelReqs + $newCustomTrips + $pendingTesti + $unreadMsgs;
 ?>
 
@@ -88,6 +100,57 @@ $needsAttention = $newTourBookings + $newCarBookings + $newHotelReqs + $newCusto
                     <span class="qa-desc"><?= $pendingTesti ? $pendingTesti . ' menunggu approval' : 'Tidak ada pending' ?></span>
                 </span>
             </a>
+        </div>
+    </div>
+
+    <!-- Data Master (Custom Trip form sources) -->
+    <div class="card border-0 shadow-sm mb-4" style="border-left:4px solid var(--gold) !important">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+                <div>
+                    <h6 class="fw-bold mb-1"><i class="bi bi-database-fill-gear text-gold" style="color:var(--gold-dark)"></i> Data Master untuk Form Custom Trip</h6>
+                    <p class="text-muted small mb-0">Tambah/edit destinasi, hotel, objek wisata, dan jenis paket yang muncul di form <a href="<?= BASE_URL ?>/custom-trip.php" target="_blank">Custom Trip user</a>.</p>
+                </div>
+                <a href="<?= BASE_URL ?>/custom-trip.php" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i> Lihat Form</a>
+            </div>
+            <div class="row g-2">
+                <div class="col-6 col-md-3">
+                    <a href="destinations.php" class="quick-action">
+                        <span class="qa-icon" style="background:var(--primary-light);color:var(--primary)"><i class="bi bi-geo-alt-fill"></i></span>
+                        <span class="qa-text">
+                            <span class="qa-title">Destinasi (Kota/Negara)</span>
+                            <span class="qa-desc"><?= $totalDestinations ?> destinasi</span>
+                        </span>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="hotels.php" class="quick-action">
+                        <span class="qa-icon" style="background:#ede9fe;color:#6d28d9"><i class="bi bi-building"></i></span>
+                        <span class="qa-text">
+                            <span class="qa-title">Hotel</span>
+                            <span class="qa-desc"><?= $totalHotels ?> hotel</span>
+                        </span>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="attractions.php" class="quick-action">
+                        <span class="qa-icon" style="background:#d1fae5;color:#059669"><i class="bi bi-signpost-split"></i></span>
+                        <span class="qa-text">
+                            <span class="qa-title">Objek Wisata</span>
+                            <span class="qa-desc"><?= $totalAttractions ?> objek wisata</span>
+                        </span>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="tour-categories.php" class="quick-action">
+                        <span class="qa-icon" style="background:#fef3c7;color:#d97706"><i class="bi bi-tags-fill"></i></span>
+                        <span class="qa-text">
+                            <span class="qa-title">Jenis Paket Wisata</span>
+                            <span class="qa-desc"><?= $totalCategories ?> jenis</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 

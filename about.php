@@ -2,8 +2,8 @@
 $pageTitle = 'Tentang Kami';
 require_once 'includes/header.php';
 
-$vision = getSetting('vision') ?: 'Menjadi travel agent terdepan di Indonesia Timur yang menghadirkan pengalaman liburan tak terlupakan dengan pelayanan berkualitas tinggi.';
-$mission = getSetting('mission') ?: 'Menyediakan paket wisata berkualitas dengan harga kompetitif, memberikan pelayanan personal 24/7 via WhatsApp, membangun kepercayaan melalui transparansi, dan mempromosikan pariwisata Indonesia Timur ke dunia.';
+$vision = getSetting('vision') ?: 'Menjadi travel agent terdepan di Indonesia yang menghadirkan pengalaman liburan tak terlupakan dengan pelayanan berkualitas tinggi.';
+$mission = getSetting('mission') ?: 'Menyediakan paket wisata berkualitas dengan harga kompetitif, memberikan pelayanan personal 24/7 via WhatsApp, membangun kepercayaan melalui transparansi, dan mempromosikan pariwisata Indonesia ke dunia.';
 $about = getSetting('about_text') ?: 'DNA Vacation adalah travel agent terpercaya untuk liburan impian Anda.';
 
 $statsTours = $pdo->query("SELECT COUNT(*) FROM tours WHERE is_active=1")->fetchColumn();
@@ -14,7 +14,7 @@ $statsBookings = $pdo->query("SELECT COUNT(*) FROM tour_bookings")->fetchColumn(
 
 <div class="page-header">
     <div class="container">
-        <h1>Tentang <span class="script">DNA</span> Vacation</h1>
+        <h1>Tentang DNA VACATION</h1>
         <p>Mengenal lebih dekat travel partner Anda untuk menjelajahi Indonesia</p>
     </div>
 </div>
@@ -24,7 +24,7 @@ $statsBookings = $pdo->query("SELECT COUNT(*) FROM tour_bookings")->fetchColumn(
         <div class="row g-5 align-items-center mb-5">
             <div class="col-lg-6 order-lg-1 order-2">
                 <span class="badge bg-light text-primary-custom border mb-2" style="padding:.5rem 1rem;font-weight:600"><i class="bi bi-airplane-engines"></i> Travel Agent Terpercaya</span>
-                <h2 class="fw-bold mb-3"><span class="text-primary-custom">DNA</span> Vacation</h2>
+                <h2 class="fw-bold mb-3"><span class="text-primary-custom">DNA</span> VACATION</h2>
                 <p class="text-muted"><?= nl2br(e($about)) ?></p>
                 <p class="text-muted">Kami berkomitmen memberikan pengalaman liburan terbaik dengan harga terjangkau dan pelayanan profesional. Dengan tim berpengalaman dan koneksi luas di berbagai destinasi wisata, kami siap mewujudkan liburan impian Anda.</p>
                 <div class="mt-4">
@@ -38,8 +38,7 @@ $statsBookings = $pdo->query("SELECT COUNT(*) FROM tour_bookings")->fetchColumn(
                         <div class="w-100 h-100 d-flex align-items-center justify-content-center text-white">
                             <div class="text-center">
                                 <i class="bi bi-globe-asia-australia" style="font-size:5rem;opacity:.4"></i>
-                                <h3 class="fw-bold mt-3">Indonesia Timur</h3>
-                                <p class="opacity-75">Toraja · Wakatobi · Bunaken · Labuan Bajo · Raja Ampat</p>
+                                <h3 class="fw-bold mt-3">Indonesia</h3>
                             </div>
                         </div>
                     </div>
@@ -107,7 +106,7 @@ $statsBookings = $pdo->query("SELECT COUNT(*) FROM tour_bookings")->fetchColumn(
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="section-title">Nilai-Nilai Kami</h2>
-            <p class="section-subtitle">Prinsip yang menjadi fondasi setiap layanan DNA Vacation</p>
+            <p class="section-subtitle">Prinsip yang menjadi fondasi setiap layanan DNA VACATION</p>
         </div>
         <div class="row g-4">
             <?php
@@ -117,7 +116,7 @@ $statsBookings = $pdo->query("SELECT COUNT(*) FROM tour_bookings")->fetchColumn(
                 ['bi-heart', 'Personal Touch', 'Setiap pelanggan unik. Kami dengarkan kebutuhan Anda dan susun trip yang sesuai.'],
                 ['bi-lightning', 'Responsif', 'Respons WhatsApp cepat, 24/7. Kami selalu siap menjawab pertanyaan & handle emergency.'],
                 ['bi-shield-check', 'Terpercaya', 'Ratusan trip sukses. Testimoni jujur dari pelanggan asli menjadi bukti kualitas kami.'],
-                ['bi-globe', 'Cinta Indonesia', 'Kami passionate dalam mempromosikan keindahan Nusantara, terutama Indonesia Timur.'],
+                ['bi-globe', 'Cinta Indonesia', 'Kami passionate dalam mempromosikan keindahan Nusantara.'],
             ];
             foreach ($values as $v): ?>
             <div class="col-md-6 col-lg-4">

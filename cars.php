@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'Sewa Mobil';
+$pageTitle = 'Rent Car';
 require_once 'includes/header.php';
 
 $where = ['c.is_available = 1'];
@@ -36,8 +36,8 @@ $returnDate = $_GET['return_date'] ?? '';
 
 <div class="page-header">
     <div class="container">
-        <h1>Rent <span class="script">Mobil</span></h1>
-        <p>Pilihan mobil terbaik dengan/tanpa sopir untuk perjalanan Anda di Sulawesi & Indonesia</p>
+        <h1>Rent Car</h1>
+        <p>Pilihan mobil terbaik untuk menemani perjalanan Anda</p>
     </div>
 </div>
 

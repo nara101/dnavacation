@@ -3,7 +3,7 @@ require_once 'includes/config.php';
 $slug = $_GET['slug'] ?? '';
 if (!$slug) { header('Location: ' . BASE_URL . '/blog.php'); exit; }
 
-$stmt = $pdo->prepare("SELECT p.*, c.name as category_name, a.full_name as author_name FROM blog_posts p LEFT JOIN blog_categories c ON p.category_id=c.id LEFT JOIN admin_users a ON p.author_id=a.id WHERE p.slug=? AND p.is_published=1");
+$stmt = $pdo->prepare("SELECT p.*, c.name as category_name, a.full_name as author_name FROM blog_posts p LEFT JOIN blog_categories c ON p.category_id=c.id LEFT JOIN users a ON p.author_id=a.id WHERE p.slug=? AND p.is_published=1");
 $stmt->execute([$slug]);
 $post = $stmt->fetch();
 if (!$post) { header('Location: ' . BASE_URL . '/blog.php'); exit; }
